@@ -9,5 +9,4 @@ public class JavaWaiterApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(JavaWaiterApplication.class, args);
 	}
-
 }

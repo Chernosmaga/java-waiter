@@ -9,9 +9,13 @@ import java.sql.SQLException;
 public class DishMapper implements RowMapper<Dish> {
     @Override
     public Dish mapRow(ResultSet rs, int rowNum) throws SQLException {
-        return new Dish(rs.getInt("dish_id"), rs.getString("title"),
-                rs.getBoolean("is_available"), rs.getInt("quantity"),
-                rs.getInt("status_id"), rs.getDouble("price"),
-                rs.getString("comment"));
+        Dish dish = new Dish();
+        dish.setDishId(rs.getInt("dish_id"));
+        dish.setTitle(rs.getString("title"));
+        dish.setIsAvailable(rs.getBoolean("is_available"));
+        dish.setQuantity(rs.getInt("quantity"));
+        dish.setTimeLimit(rs.getLong("time_limit"));
+        dish.setPrice(rs.getDouble("price"));
+        return dish;
     }
 }
