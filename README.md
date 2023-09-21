@@ -12,6 +12,5 @@
 * [Сергей Черносмага](https://github.com/Chernosmaga)
 * [Евгений Фоменко](https://github.com/EvgeniyFomenko)
 * [Кирилл Андреев](https://github.com/Elite-tea)
-## Схема базы данных
-![](https://github.com/Chernosmaga/java-waiter/blob/add_dish_by_Sergey/src/main/resources/database.png)
+* [Дмитрий Кичигин](https://github.com/Buriyone)
 ##
