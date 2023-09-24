@@ -1,0 +1,2663 @@
+{
+	"info": {
+		"_postman_id": "a668b4bf-5627-4bee-a6d3-4e5607ea0c28",
+		"name": "java-waiter",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "28184234"
+	},
+	"item": [
+		{
+			"name": "dishes",
+			"item": [
+				{
+					"name": "add dish id 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 or 201\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200,201]);\r",
+									"});\r",
+									"pm.test(\"Has dish create response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Test dish 'dishId' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('dishId');\r",
+									"    pm.expect(jsonData.dishId, '\"dishId\" must be 1').to.eql(1);\r",
+									"});\r",
+									"pm.test(\"Test dish 'title' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('title');\r",
+									"    pm.expect(jsonData.title, '\"title\" must be \"Свекольник\"').to.eql('Свекольник');\r",
+									"});\r",
+									"pm.test(\"Test dish 'isAvailable' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('isAvailable');\r",
+									"    pm.expect(jsonData.isAvailable, '\"isAvailable\" field must be \"true\"').to.true;\r",
+									"});\r",
+									"pm.test(\"Test dish 'quantity' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('quantity');\r",
+									"    pm.expect(jsonData.quantity, '\"quantity\" field must be 10').to.eql(10);    \r",
+									"});\r",
+									"pm.test(\"Test dish 'timeLimit' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('timeLimit');\r",
+									"    pm.expect(jsonData.timeLimit, '\"timeLimit\" field must be 10').to.eql(10);\r",
+									"});\r",
+									"pm.test(\"Test dish 'price' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('price');\r",
+									"    pm.expect(jsonData.price, '\"price\" field must be 300.0').to.eql(300.0);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "*/*",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Свекольник\",\r\n    \"isAvailable\": \"true\",\r\n    \"quantity\": \"10\",\r\n    \"timeLimit\": \"10\",\r\n    \"price\": \"300.0\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseUrl}}/dish"
+					},
+					"response": []
+				},
+				{
+					"name": "add dish id 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 or 201\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200,201]);\r",
+									"});\r",
+									"pm.test(\"Has dish create response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Test dish 'dishId' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('dishId');\r",
+									"    pm.expect(jsonData.dishId, '\"dishId\" must be 2').to.eql(2);\r",
+									"});\r",
+									"pm.test(\"Test dish 'title' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('title');\r",
+									"    pm.expect(jsonData.title, '\"title\" must be \"Шоколадный фондан\"').to.eql('Шоколадный фондан');\r",
+									"});\r",
+									"pm.test(\"Test dish 'isAvailable' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('isAvailable');\r",
+									"    pm.expect(jsonData.isAvailable, '\"isAvailable\" must be \"true\"').to.true;\r",
+									"});\r",
+									"pm.test(\"Test dish 'quantity' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('quantity');\r",
+									"    pm.expect(jsonData.quantity, '\"quantity\" field must be 3').to.eql(3);    \r",
+									"});\r",
+									"pm.test(\"Test dish 'timeLimit' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('timeLimit');\r",
+									"    pm.expect(jsonData.timeLimit, '\"timeLimit\" field must be 15').to.eql(15);\r",
+									"});\r",
+									"pm.test(\"Test dish 'price' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('price');\r",
+									"    pm.expect(jsonData.price, '\"price\" field must be 600.0').to.eql(600.0);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "*/*",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Шоколадный фондан\",\r\n    \"isAvailable\": \"true\",\r\n    \"quantity\": \"3\",\r\n    \"timeLimit\": \"15\",\r\n    \"price\": \"600.0\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseUrl}}/dish"
+					},
+					"response": []
+				},
+				{
+					"name": "fail add dish with no title",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500 or 400\", function () {\r",
+									"     pm.expect(pm.response.code).to.be.oneOf([500,400]);\r",
+									"});\r",
+									"pm.test(\"Has error response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "*/*",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"isAvailable\": \"false\",\r\n    \"quantity\": \"10\",\r\n    \"timeLimit\": \"10\",\r\n    \"price\": \"800.0\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseUrl}}/dish"
+					},
+					"response": []
+				},
+				{
+					"name": "fail add dish with negative price",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500 or 400\", function () {\r",
+									"     pm.expect(pm.response.code).to.be.oneOf([500,400]);\r",
+									"});\r",
+									"pm.test(\"Has error response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "*/*",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Свекольник\",\r\n    \"isAvailable\": \"true\",\r\n    \"quantity\": \"10\",\r\n    \"timeLimit\": \"10\",\r\n    \"price\": \"-300.0\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseUrl}}/dish"
+					},
+					"response": []
+				},
+				{
+					"name": "fail add dish with negative timeLimit",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500 or 400\", function () {\r",
+									"     pm.expect(pm.response.code).to.be.oneOf([500,400]);\r",
+									"});\r",
+									"pm.test(\"Has error response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "*/*",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Свекольник\",\r\n    \"isAvailable\": \"true\",\r\n    \"quantity\": \"10\",\r\n    \"timeLimit\": \"-10\",\r\n    \"price\": \"300.0\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseUrl}}/dish"
+					},
+					"response": []
+				},
+				{
+					"name": "fail add existing dish",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500 or 400\", function () {\r",
+									"     pm.expect(pm.response.code).to.be.oneOf([500,400]);\r",
+									"});\r",
+									"pm.test(\"Has error response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "*/*",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Свекольник\",\r\n    \"isAvailable\": \"true\",\r\n    \"quantity\": \"10\",\r\n    \"timeLimit\": \"10\",\r\n    \"price\": \"300.0\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseUrl}}/dish"
+					},
+					"response": []
+				},
+				{
+					"name": "update dish id 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 or 201\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200,201]);\r",
+									"});\r",
+									"pm.test(\"Has dish create response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Test dish 'dishId' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('dishId');\r",
+									"    pm.expect(jsonData.dishId, '\"dishId\" must be 1').to.eql(1);\r",
+									"});\r",
+									"pm.test(\"Test dish 'title' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('title');\r",
+									"    pm.expect(jsonData.title, '\"title\" must be \"Свекольник\"').to.eql('Свекольник');\r",
+									"});\r",
+									"pm.test(\"Test dish 'isAvailable' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('isAvailable');\r",
+									"    pm.expect(jsonData.isAvailable, '\"isAvailable\" must be \"true\"').to.true;\r",
+									"});\r",
+									"pm.test(\"Test dish 'quantity' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('quantity');\r",
+									"    pm.expect(jsonData.quantity, '\"quantity\" field must be 10').to.eql(10);    \r",
+									"});\r",
+									"pm.test(\"Test dish 'timeLimit' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('timeLimit');\r",
+									"    pm.expect(jsonData.timeLimit, '\"timeLimit\" field must be 5').to.eql(5);\r",
+									"});\r",
+									"pm.test(\"Test dish 'price' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('price');\r",
+									"    pm.expect(jsonData.price, '\"price\" field must be 300.0').to.eql(300.0);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"dishId\": \"1\",\r\n    \"title\": \"Свекольник\",\r\n    \"isAvailable\": \"true\",\r\n    \"quantity\": \"10\",\r\n    \"timeLimit\": \"5\",\r\n    \"price\": \"300.0\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseUrl}}/dish"
+					},
+					"response": []
+				},
+				{
+					"name": "fail update dish if not exists",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"pm.test(\"Has error response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "*/*",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"dishId\": \"999\",\r\n    \"title\": \"Филе миньон\",\r\n    \"isAvailable\": \"true\",\r\n    \"quantity\": \"2\",\r\n    \"timeLimit\": \"30\",\r\n    \"price\": \"800.0\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseUrl}}/dish"
+					},
+					"response": []
+				},
+				{
+					"name": "delete dish id 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200,204]);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/dish/:dishId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"dish",
+								":dishId"
+							],
+							"variable": [
+								{
+									"key": "dishId",
+									"value": "2",
+									"description": "(Required)"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "fail get dish id 999",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"pm.test(\"Has error response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/dish/:dishId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"dish",
+								":dishId"
+							],
+							"variable": [
+								{
+									"key": "dishId",
+									"value": "999",
+									"description": "(Required)"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get dish with id 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 or 201\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200,201]);\r",
+									"});\r",
+									"pm.test(\"Get dish response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Test dish 'dishId' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('dishId');\r",
+									"    pm.expect(jsonData.dishId, '\"dishId\" must be 1').to.eql(1);\r",
+									"});\r",
+									"pm.test(\"Test dish 'title' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('title');\r",
+									"    pm.expect(jsonData.title, '\"title\" must be \"Свекольник\"').to.eql('Свекольник');\r",
+									"});\r",
+									"pm.test(\"Test dish 'isAvailable' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('isAvailable');\r",
+									"    pm.expect(jsonData.isAvailable, '\"isAvailable\" must be \"true\"').to.true;\r",
+									"});\r",
+									"pm.test(\"Test dish 'quantity' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('quantity');\r",
+									"    pm.expect(jsonData.quantity, '\"quantity\" field must be 10').to.eql(10);    \r",
+									"});\r",
+									"pm.test(\"Test dish 'timeLimit' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('timeLimit');\r",
+									"    pm.expect(jsonData.timeLimit, '\"timeLimit\" field must be 5').to.eql(5);\r",
+									"});\r",
+									"pm.test(\"Test dish 'price' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('price');\r",
+									"    pm.expect(jsonData.price, '\"price\" field must be 300.0').to.eql(300.0);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/dish/:dishId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"dish",
+								":dishId"
+							],
+							"variable": [
+								{
+									"key": "dishId",
+									"value": "1",
+									"description": "(Required)"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get dishes list",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.be.ok;\r",
+									"});\r",
+									"pm.test(\"Test list dish response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.length, 'List length must be 1').to.eql(1);\r",
+									"});\r",
+									"pm.test(\"Test dish[0] 'dishId' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData[0]).to.have.property('dishId');\r",
+									"    pm.expect(jsonData[0].dishId, '\"dishId\" must be 1').to.eql(1);\r",
+									"});\r",
+									"pm.test(\"Test dish[0] 'title' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData[0]).to.have.property('title');\r",
+									"    pm.expect(jsonData[0].title, '\"title\" must be \"Свекольник\"').to.eql('Свекольник');\r",
+									"});\r",
+									"pm.test(\"Test dish[0] 'isAvailable' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData[0]).to.have.property('isAvailable');\r",
+									"    pm.expect(jsonData[0].isAvailable, '\"isAvailable\" must be \"true\"').to.true;\r",
+									"});\r",
+									"pm.test(\"Test dish[0] 'quantity' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData[0]).to.have.property('quantity');\r",
+									"    pm.expect(jsonData[0].quantity, '\"quantity\" field must be 10').to.eql(10);\r",
+									"});\r",
+									"pm.test(\"Test dish[0] 'timeLimit' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData[0]).to.have.property('timeLimit');\r",
+									"    pm.expect(jsonData[0].timeLimit, '\"timeLimit\" field must be 5').to.eql(5);    \r",
+									"});\r",
+									"pm.test(\"Test dish[0] 'price' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData[0]).to.have.property('price');\r",
+									"    pm.expect(jsonData[0].price, '\"price\" field must 300.0').to.eql(300.0);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*",
+								"type": "text"
+							}
+						],
+						"url": "{{baseUrl}}/dish"
+					},
+					"response": []
+				},
+				{
+					"name": "delete dishes",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200,204]);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*",
+								"type": "text"
+							}
+						],
+						"url": "{{baseUrl}}/dish"
+					},
+					"response": []
+				},
+				{
+					"name": "get dishes list empty",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.be.ok;\r",
+									"});\r",
+									"pm.test(\"Test list dish response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.length, 'List length must be 0').to.eql(0);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*",
+								"type": "text"
+							}
+						],
+						"url": "{{baseUrl}}/dish"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "employee",
+			"item": [
+				{
+					"name": "add employee id 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 or 201\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200,201]);\r",
+									"});\r",
+									"pm.test(\"Has employee create response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Test employee 'employeeId' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('employeeId');\r",
+									"    pm.expect(jsonData.employeeId, '\"employeeId\" must be 1').to.eql(1);\r",
+									"});\r",
+									"pm.test(\"Test employee 'phone' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('phone');\r",
+									"    pm.expect(jsonData.phone, '\"phone\" must be \"8(954)432-21-21\"').to.eql('8(954)432-21-21');\r",
+									"});\r",
+									"pm.test(\"Test employee 'firstName' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('firstName');\r",
+									"    pm.expect(jsonData.firstName, '\"firstName\" field must be \"Andrew\"').to.eql('Andrew');\r",
+									"});\r",
+									"pm.test(\"Test employee 'surname' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('surname');\r",
+									"    pm.expect(jsonData.surname, '\"surname\" field must be \"Beglov\"').to.eql('Beglov');    \r",
+									"});\r",
+									"pm.test(\"Test employee 'userPassword' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('userPassword');\r",
+									"    pm.expect(jsonData.userPassword, '\"userPassword\" field must be \"ugg50Hp-2jdq\"').to.eql('ugg50Hp-2jdq');\r",
+									"});\r",
+									"pm.test(\"Test employee 'isActive' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('isActive');\r",
+									"    pm.expect(jsonData.isActive, '\"isActive\" field must be \"true\"').to.true;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"phone\": \"8(954)432-21-21\",\r\n    \"first_name\": \"Andrew\",\r\n    \"surname\": \"Beglov\",\r\n    \"user_password\": \"ugg50Hp-2jdq\",\r\n    \"is_active\": \"true\"\r\n}"
+						},
+						"url": "{{baseUrl}}/employee"
+					},
+					"response": []
+				},
+				{
+					"name": "add employee id 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 or 201\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200,201]);\r",
+									"});\r",
+									"pm.test(\"Has employee create response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Test employee 'employeeId' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('employeeId');\r",
+									"    pm.expect(jsonData.employeeId, '\"employeeId\" must be 2').to.eql(2);\r",
+									"});\r",
+									"pm.test(\"Test employee 'phone' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('phone');\r",
+									"    pm.expect(jsonData.phone, '\"phone\" must be \"8(954)794-53-96\"').to.eql('8(954)794-53-96');\r",
+									"});\r",
+									"pm.test(\"Test employee 'firstName' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('firstName');\r",
+									"    pm.expect(jsonData.firstName, '\"firstName\" field must be \"Maria\"').to.eql('Maria');\r",
+									"});\r",
+									"pm.test(\"Test employee 'surname' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('surname');\r",
+									"    pm.expect(jsonData.surname, '\"surname\" field must be \"Zolotova\"').to.eql('Zolotova');    \r",
+									"});\r",
+									"pm.test(\"Test employee 'userPassword' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('userPassword');\r",
+									"    pm.expect(jsonData.userPassword, '\"userPassword\" field must be \"ugyp-25n5kGfD\"').to.eql('ugyp-25n5kGfD');\r",
+									"});\r",
+									"pm.test(\"Test employee 'isActive' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('isActive');\r",
+									"    pm.expect(jsonData.isActive, '\"isActive\" field must be \"true\"').to.true;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"phone\": \"8(954)794-53-96\",\r\n    \"first_name\": \"Maria\",\r\n    \"surname\": \"Zolotova\",\r\n    \"user_password\": \"ugyp-25n5kGfD\",\r\n    \"is_active\": \"true\"\r\n}"
+						},
+						"url": "{{baseUrl}}/employee"
+					},
+					"response": []
+				},
+				{
+					"name": "fail add employee with no first name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500 or 400\", function () {\r",
+									"     pm.expect(pm.response.code).to.be.oneOf([500,400]);\r",
+									"});\r",
+									"pm.test(\"Has error response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"phone\": \"8(954)765-16-43\",\r\n    \"first_name\": \"\",\r\n    \"surname\": \"Spencer\",\r\n    \"user_password\": \"ugg5jas_68735m\",\r\n    \"is_active\": \"true\"\r\n}"
+						},
+						"url": "{{baseUrl}}/employee"
+					},
+					"response": []
+				},
+				{
+					"name": "fail add employee with incorrect phone",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500 or 400\", function () {\r",
+									"     pm.expect(pm.response.code).to.be.oneOf([500,400]);\r",
+									"});\r",
+									"pm.test(\"Has error response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"phone\": \"8(954)765-631-08-86\",\r\n    \"first_name\": \"Matthew\",\r\n    \"surname\": \"Spencer\",\r\n    \"user_password\": \"ugg5hl-964pLMS\",\r\n    \"is_active\": \"true\"\r\n}"
+						},
+						"url": "{{baseUrl}}/employee"
+					},
+					"response": []
+				},
+				{
+					"name": "fail add employee with duplicate password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500 or 400\", function () {\r",
+									"     pm.expect(pm.response.code).to.be.oneOf([500,400]);\r",
+									"});\r",
+									"pm.test(\"Has error response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"phone\": \"8(954)765-08-86\",\r\n    \"first_name\": \"Anna\",\r\n    \"surname\": \"Suchkova\",\r\n    \"user_password\": \"ugg50Hp-2jdq\",\r\n    \"is_active\": \"true\"\r\n}"
+						},
+						"url": "{{baseUrl}}/employee"
+					},
+					"response": []
+				},
+				{
+					"name": "fail add employee with empty password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500 or 400\", function () {\r",
+									"     pm.expect(pm.response.code).to.be.oneOf([500,400]);\r",
+									"});\r",
+									"pm.test(\"Has error response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"phone\": \"8(954)427-90-61\",\r\n    \"first_name\": \"Milena\",\r\n    \"surname\": \"Begozova\",\r\n    \"user_password\": \"\",\r\n    \"is_active\": \"true\"\r\n}"
+						},
+						"url": "{{baseUrl}}/employee"
+					},
+					"response": []
+				},
+				{
+					"name": "fail add employee with empty phone",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500 or 400\", function () {\r",
+									"     pm.expect(pm.response.code).to.be.oneOf([500,400]);\r",
+									"});\r",
+									"pm.test(\"Has error response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"phone\": \"\",\r\n    \"first_name\": \"Milena\",\r\n    \"surname\": \"Begozova\",\r\n    \"user_password\": \"jhkl46-72jHGFP21\",\r\n    \"is_active\": \"true\"\r\n}"
+						},
+						"url": "{{baseUrl}}/employee"
+					},
+					"response": []
+				},
+				{
+					"name": "fail add employee with no surname",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500 or 400\", function () {\r",
+									"     pm.expect(pm.response.code).to.be.oneOf([500,400]);\r",
+									"});\r",
+									"pm.test(\"Has error response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"phone\": \"8(989)854-53-43\",\r\n    \"first_name\": \"Samuel\",\r\n    \"surname\": \"\",\r\n    \"user_password\": \"ugg50H90\",\r\n    \"is_active\": \"true\"\r\n}"
+						},
+						"url": "{{baseUrl}}/employee"
+					},
+					"response": []
+				},
+				{
+					"name": "fail add employee with empty isActive",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500 or 400\", function () {\r",
+									"     pm.expect(pm.response.code).to.be.oneOf([500,400]);\r",
+									"});\r",
+									"pm.test(\"Has error response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"phone\": \"8(956)631-08-86\",\r\n    \"first_name\": \"Matthew\",\r\n    \"surname\": \"Spencer\",\r\n    \"user_password\": \"ugg5hl-964pLMS\",\r\n    \"is_active\": \"\"\r\n}"
+						},
+						"url": "{{baseUrl}}/employee"
+					},
+					"response": []
+				},
+				{
+					"name": "fail add employee with duplicate phone",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500 or 400\", function () {\r",
+									"     pm.expect(pm.response.code).to.be.oneOf([500,400]);\r",
+									"});\r",
+									"pm.test(\"Has error response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"phone\": \"8(954)794-53-96\",\r\n    \"first_name\": \"Max\",\r\n    \"surname\": \"Gotov\",\r\n    \"user_password\": \"kppwqh-754iGF\",\r\n    \"is_active\": \"true\"\r\n}"
+						},
+						"url": "{{baseUrl}}/employee"
+					},
+					"response": []
+				},
+				{
+					"name": "fail add employee with short password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500 or 400\", function () {\r",
+									"     pm.expect(pm.response.code).to.be.oneOf([500,400]);\r",
+									"});\r",
+									"pm.test(\"Has error response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"phone\": \"8(954)782-50-00\",\r\n    \"first_name\": \"Anastasiya\",\r\n    \"surname\": \"Zolotovskaya\",\r\n    \"user_password\": \"ugyp-25n\",\r\n    \"is_active\": \"true\"\r\n}"
+						},
+						"url": "{{baseUrl}}/employee"
+					},
+					"response": []
+				},
+				{
+					"name": "update employee id 1 password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 or 201\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200,201]);\r",
+									"});\r",
+									"pm.test(\"Has employee create response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Test employee 'employeeId' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('employeeId');\r",
+									"    pm.expect(jsonData.employeeId, '\"employeeId\" must be 1').to.eql(1);\r",
+									"});\r",
+									"pm.test(\"Test employee 'phone' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('phone');\r",
+									"    pm.expect(jsonData.phone, '\"phone\" must be \"8(954)432-21-21\"').to.eql('8(954)432-21-21');\r",
+									"});\r",
+									"pm.test(\"Test employee 'firstName' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('firstName');\r",
+									"    pm.expect(jsonData.firstName, '\"firstName\" field must be \"Andrew\"').to.eql('Andrew');\r",
+									"});\r",
+									"pm.test(\"Test employee 'surname' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('surname');\r",
+									"    pm.expect(jsonData.surname, '\"surname\" field must be \"Beglov\"').to.eql('Beglov');    \r",
+									"});\r",
+									"pm.test(\"Test employee 'userPassword' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('userPassword');\r",
+									"    pm.expect(jsonData.userPassword, '\"userPassword\" field must be \"hlpkp_hf-542Jp\"').to.eql('hlpkp_hf-542Jp');\r",
+									"});\r",
+									"pm.test(\"Test employee 'isActive' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('isActive');\r",
+									"    pm.expect(jsonData.isActive, '\"isActive\" field must be \"true\"').to.true;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"employee_id\": \"1\",\r\n    \"phone\": \"8(954)432-21-21\",\r\n    \"first_name\": \"Andrew\",\r\n    \"surname\": \"Beglov\",\r\n    \"user_password\": \"hlpkp_hf-542Jp\",\r\n    \"is_active\": \"true\"\r\n}"
+						},
+						"url": "{{baseUrl}}/employee"
+					},
+					"response": []
+				},
+				{
+					"name": "fail update employee if not exists",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"pm.test(\"Has error response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"employee_id\": \"999\",\r\n    \"phone\": \"8(979)875-66-66\",\r\n    \"first_name\": \"Antony\",\r\n    \"surname\": \"Beglovsky\",\r\n    \"user_password\": \"h9pkp_hf7210\",\r\n    \"is_active\": \"true\"\r\n}"
+						},
+						"url": "{{baseUrl}}/employee"
+					},
+					"response": []
+				},
+				{
+					"name": "fail update with empty firstName",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500 or 400\", function () {\r",
+									"     pm.expect(pm.response.code).to.be.oneOf([500,400]);\r",
+									"});\r",
+									"pm.test(\"Has error response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"employee_id\": \"1\",\r\n    \"phone\": \"8(954)432-21-21\",\r\n    \"first_name\": \"\",\r\n    \"surname\": \"Beglov\",\r\n    \"user_password\": \"ugg50Hp-2jdq\",\r\n    \"is_active\": \"true\"\r\n}"
+						},
+						"url": "{{baseUrl}}/employee"
+					},
+					"response": []
+				},
+				{
+					"name": "fail update with empty surname",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500 or 400\", function () {\r",
+									"     pm.expect(pm.response.code).to.be.oneOf([500,400]);\r",
+									"});\r",
+									"pm.test(\"Has error response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"employee_id\": \"1\",\r\n    \"phone\": \"8(954)432-21-21\",\r\n    \"first_name\": \"Andrew\",\r\n    \"surname\": \"\",\r\n    \"user_password\": \"ugg50Hp-2jdq\",\r\n    \"is_active\": \"true\"\r\n}"
+						},
+						"url": "{{baseUrl}}/employee"
+					},
+					"response": []
+				},
+				{
+					"name": "fail update employee with incorrect phone",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500 or 400\", function () {\r",
+									"     pm.expect(pm.response.code).to.be.oneOf([500,400]);\r",
+									"});\r",
+									"pm.test(\"Has error response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"employee_id\": \"1\",\r\n    \"phone\": \"8(954)432-999-21-21\",\r\n    \"first_name\": \"Andrew\",\r\n    \"surname\": \"Beglov\",\r\n    \"user_password\": \"ugg50Hp-2jdq\",\r\n    \"is_active\": \"true\"\r\n}"
+						},
+						"url": "{{baseUrl}}/employee"
+					},
+					"response": []
+				},
+				{
+					"name": "fail update employee with short password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500 or 400\", function () {\r",
+									"     pm.expect(pm.response.code).to.be.oneOf([500,400]);\r",
+									"});\r",
+									"pm.test(\"Has error response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"employee_id\": \"1\",\r\n    \"phone\": \"8(954)432-21-21\",\r\n    \"first_name\": \"Andrew\",\r\n    \"surname\": \"Beglov\",\r\n    \"user_password\": \"ugg50Hp\",\r\n    \"is_active\": \"true\"\r\n}"
+						},
+						"url": "{{baseUrl}}/employee"
+					},
+					"response": []
+				},
+				{
+					"name": "fail update employee with no phone",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500 or 400\", function () {\r",
+									"     pm.expect(pm.response.code).to.be.oneOf([500,400]);\r",
+									"});\r",
+									"pm.test(\"Has error response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"employee_id\": \"1\",\r\n    \"phone\": \"\",\r\n    \"first_name\": \"Andrew\",\r\n    \"surname\": \"Beglov\",\r\n    \"user_password\": \"ugg50Hp-2jdq\",\r\n    \"is_active\": \"true\"\r\n}"
+						},
+						"url": "{{baseUrl}}/employee"
+					},
+					"response": []
+				},
+				{
+					"name": "fail update employee with no password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500 or 400\", function () {\r",
+									"     pm.expect(pm.response.code).to.be.oneOf([500,400]);\r",
+									"});\r",
+									"pm.test(\"Has error response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"employee_id\": \"1\",\r\n    \"phone\": \"8(954)432-21-21\",\r\n    \"first_name\": \"Andrew\",\r\n    \"surname\": \"Beglov\",\r\n    \"user_password\": \"\",\r\n    \"is_active\": \"true\"\r\n}"
+						},
+						"url": "{{baseUrl}}/employee"
+					},
+					"response": []
+				},
+				{
+					"name": "get employee id 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 or 201\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200,201]);\r",
+									"});\r",
+									"pm.test(\"Has employee create response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Test employee 'employeeId' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('employeeId');\r",
+									"    pm.expect(jsonData.employeeId, '\"employeeId\" must be 2').to.eql(2);\r",
+									"});\r",
+									"pm.test(\"Test employee 'phone' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('phone');\r",
+									"    pm.expect(jsonData.phone, '\"phone\" must be \"8(954)794-53-96\"').to.eql('8(954)794-53-96');\r",
+									"});\r",
+									"pm.test(\"Test employee 'firstName' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('firstName');\r",
+									"    pm.expect(jsonData.firstName, '\"firstName\" field must be \"Maria\"').to.eql('Maria');\r",
+									"});\r",
+									"pm.test(\"Test employee 'surname' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('surname');\r",
+									"    pm.expect(jsonData.surname, '\"surname\" field must be \"Zolotova\"').to.eql('Zolotova');    \r",
+									"});\r",
+									"pm.test(\"Test employee 'userPassword' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('userPassword');\r",
+									"    pm.expect(jsonData.userPassword, '\"userPassword\" field must be \"ugyp-25n5kGfD\"').to.eql('ugyp-25n5kGfD');\r",
+									"});\r",
+									"pm.test(\"Test employee 'isActive' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('isActive');\r",
+									"    pm.expect(jsonData.isActive, '\"isActive\" field must be \"true\"').to.true;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/employee/:employeeId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"employee",
+								":employeeId"
+							],
+							"variable": [
+								{
+									"key": "employeeId",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "fail get employee with id 999",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"pm.test(\"Has error response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/employee/:employeeId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"employee",
+								":employeeId"
+							],
+							"variable": [
+								{
+									"key": "employeeId",
+									"value": "999"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete employee with id 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200,204]);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/employee/:employeeId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"employee",
+								":employeeId"
+							],
+							"variable": [
+								{
+									"key": "employeeId",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get employee list",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.be.ok;\r",
+									"});\r",
+									"pm.test(\"Test list dish response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.length, 'List length must be 1').to.eql(1);\r",
+									"});\r",
+									"pm.test(\"Test employee[0] 'employeeId' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData[0]).to.have.property('employeeId');\r",
+									"    pm.expect(jsonData[0].employeeId, '\"employeeId\" must be 1').to.eql(1);\r",
+									"});\r",
+									"pm.test(\"Test employee[0] 'phone' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData[0]).to.have.property('phone');\r",
+									"    pm.expect(jsonData[0].phone, '\"phone\" must be \"8(954)432-21-21\"').to.eql('8(954)432-21-21');\r",
+									"});\r",
+									"pm.test(\"Test employee[0] 'firstName' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData[0]).to.have.property('firstName');\r",
+									"    pm.expect(jsonData[0].firstName, '\"firstName\" field must be \"Andrew\"').to.eql('Andrew');\r",
+									"});\r",
+									"pm.test(\"Test employee[0] 'surname' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData[0]).to.have.property('surname');\r",
+									"    pm.expect(jsonData[0].surname, '\"surname\" field must be \"Beglov\"').to.eql('Beglov');    \r",
+									"});\r",
+									"pm.test(\"Test employee[0] 'userPassword' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData[0]).to.have.property('userPassword');\r",
+									"    pm.expect(jsonData[0].userPassword, '\"userPassword\" field must be \"ugg50Hp-2jdq\"').to.eql('ugg50Hp-2jdq');\r",
+									"});\r",
+									"pm.test(\"Test employee[0] 'isActive' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData[0]).to.have.property('isActive');\r",
+									"    pm.expect(jsonData[0].isActive, '\"isActive\" field must be \"true\"').to.true;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*",
+								"type": "text"
+							}
+						],
+						"url": "{{baseUrl}}/employee"
+					},
+					"response": []
+				},
+				{
+					"name": "delete employees",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200,204]);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*",
+								"type": "text"
+							}
+						],
+						"url": "{{baseUrl}}/employee"
+					},
+					"response": []
+				},
+				{
+					"name": "get employees empty list",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.be.ok;\r",
+									"});\r",
+									"pm.test(\"Test list employee response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.length, 'List length must be 0').to.eql(0);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*",
+								"type": "text"
+							}
+						],
+						"url": "{{baseUrl}}/employee"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "orders",
+			"item": [
+				{
+					"name": "add order id 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 or 201\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200,201]);\r",
+									"});\r",
+									"pm.test(\"Has order create response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Test order 'orderId' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('orderId');\r",
+									"    pm.expect(jsonData.orderId, '\"orderId\" must be 1').to.eql(1);\r",
+									"});\r",
+									"pm.test(\"Test order 'tableNum' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('tableNum');\r",
+									"    pm.expect(jsonData.tableNum, '\"tableNum\" must be 1').to.eql('1');\r",
+									"});\r",
+									"pm.test(\"Test order 'guests' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('guests');\r",
+									"    pm.expect(jsonData.guests, '\"guests\" must be 3').to.eql('3');\r",
+									"});\r",
+									"pm.test(\"Test order 'creationTime' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('creationTime');\r",
+									"    pm.expect(jsonData.creationTime, '\"creationTime\" field must be \"2023-09-21T18:49:00\"').to.eql('2023-09-21T18:49:00');\r",
+									"});\r",
+									"pm.test(\"Test order 'billTime field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('billTime');\r",
+									"    pm.expect(jsonData.billTime, '\"billTime\" field must be null').to.eql(null);    \r",
+									"});\r",
+									"pm.test(\"Test order 'total' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('total');\r",
+									"    pm.expect(jsonData.total, '\"total\" field must be 0').to.eql(0);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"table_num\": \"1\",\r\n    \"guests\": \"3\",\r\n    \"creation_time\": \"2023-09-21T18:49:00\"\r\n}"
+						},
+						"url": "{{baseUrl}}/order"
+					},
+					"response": []
+				},
+				{
+					"name": "add order id 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 or 201\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200,201]);\r",
+									"});\r",
+									"pm.test(\"Has order create response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Test order 'orderId' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('orderId');\r",
+									"    pm.expect(jsonData.orderId, '\"orderId\" must be 2').to.eql(2);\r",
+									"});\r",
+									"pm.test(\"Test order 'tableNum' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('tableNum');\r",
+									"    pm.expect(jsonData.tableNum, '\"tableNum\" must be 16').to.eql('16');\r",
+									"});\r",
+									"pm.test(\"Test order 'guests' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('guests');\r",
+									"    pm.expect(jsonData.guests, '\"guests\" must be 7').to.eql('7');\r",
+									"});\r",
+									"pm.test(\"Test order 'creationTime' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('creationTime');\r",
+									"    pm.expect(jsonData.creationTime, '\"creationTime\" field must be \"2023-09-21T13:49:00\"').to.eql('2023-09-21T13:49:00');\r",
+									"});\r",
+									"pm.test(\"Test order 'billTime field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('billTime');\r",
+									"    pm.expect(jsonData.billTime, '\"billTime\" field must be \"2023-09-21T19:00:00\"').to.eql('2023-09-21T19:00:00');    \r",
+									"});\r",
+									"pm.test(\"Test order 'total' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('total');\r",
+									"    pm.expect(jsonData.total, '\"total\" field must be 6549.00').to.eql(6549.00);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"table_num\": \"16\",\r\n    \"guests\": \"7\",\r\n    \"creation_time\": \"2023-09-21T13:49:00\",\r\n    \"bill_time\": \"2023-09-21T19:00:00\",\r\n    \"total\": 6549.00\r\n}"
+						},
+						"url": "{{baseUrl}}/order"
+					},
+					"response": []
+				},
+				{
+					"name": "fail create order with empty table number",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500 or 400\", function () {\r",
+									"     pm.expect(pm.response.code).to.be.oneOf([500,400]);\r",
+									"});\r",
+									"pm.test(\"Has error response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"table_num\": \"\",\r\n    \"guests\": \"7\",\r\n    \"creation_time\": \"2023-09-21T13:49:00\",\r\n    \"bill_time\": \"2023-09-21T19:00:00\",\r\n    \"total\": 6549.00\r\n}"
+						},
+						"url": "{{baseUrl}}/order"
+					},
+					"response": []
+				},
+				{
+					"name": "fail create empty guests field",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500 or 400\", function () {\r",
+									"     pm.expect(pm.response.code).to.be.oneOf([500,400]);\r",
+									"});\r",
+									"pm.test(\"Has error response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"table_num\": \"10\",\r\n    \"guests\": \"\",\r\n    \"creation_time\": \"2023-09-21T18:49:00\",\r\n    \"bill_time\": null,\r\n    \"total\": 8076\r\n}"
+						},
+						"url": "{{baseUrl}}/order"
+					},
+					"response": []
+				},
+				{
+					"name": "fail create order with empty creationTime",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500 or 400\", function () {\r",
+									"     pm.expect(pm.response.code).to.be.oneOf([500,400]);\r",
+									"});\r",
+									"pm.test(\"Has error response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"table_num\": \"16\",\r\n    \"guests\": \"1\",\r\n    \"creation_time\": \"\",\r\n    \"bill_time\": \"2023-09-21T19:00:00\",\r\n    \"total\": 688.00\r\n}"
+						},
+						"url": "{{baseUrl}}/order"
+					},
+					"response": []
+				},
+				{
+					"name": "update guests field order id 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 or 201\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200,201]);\r",
+									"});\r",
+									"pm.test(\"Has order create response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Test order 'orderId' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('orderId');\r",
+									"    pm.expect(jsonData.orderId, '\"orderId\" must be 1').to.eql(1);\r",
+									"});\r",
+									"pm.test(\"Test order 'tableNum' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('tableNum');\r",
+									"    pm.expect(jsonData.tableNum, '\"tableNum\" must be 1').to.eql('1');\r",
+									"});\r",
+									"pm.test(\"Test order 'guests' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('guests');\r",
+									"    pm.expect(jsonData.guests, '\"guests\" must be 2').to.eql('2');\r",
+									"});\r",
+									"pm.test(\"Test order 'creationTime' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('creationTime');\r",
+									"    pm.expect(jsonData.creationTime, '\"creationTime\" field must be \"2023-09-21T18:49:00\"').to.eql('2023-09-21T18:49:00');\r",
+									"});\r",
+									"pm.test(\"Test order 'billTime field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('billTime');\r",
+									"    pm.expect(jsonData.billTime, '\"billTime\" field must be null').to.eql(null);    \r",
+									"});\r",
+									"pm.test(\"Test order 'total' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('total');\r",
+									"    pm.expect(jsonData.total, '\"total\" field must be 0').to.eql(0);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"table_num\": \"1\",\r\n    \"guests\": \"2\",\r\n    \"creation_time\": \"2023-09-21T18:49:00\",\r\n    \"bill_time\": null,\r\n    \"total\": 0\r\n}"
+						},
+						"url": "{{baseUrl}}/order"
+					},
+					"response": []
+				},
+				{
+					"name": "update table number order id 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 or 201\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200,201]);\r",
+									"});\r",
+									"pm.test(\"Has order create response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Test order 'orderId' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('orderId');\r",
+									"    pm.expect(jsonData.orderId, '\"orderId\" must be 2').to.eql(2);\r",
+									"});\r",
+									"pm.test(\"Test order 'tableNum' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('tableNum');\r",
+									"    pm.expect(jsonData.tableNum, '\"tableNum\" must be 19').to.eql('19');\r",
+									"});\r",
+									"pm.test(\"Test order 'guests' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('guests');\r",
+									"    pm.expect(jsonData.guests, '\"guests\" must be 7').to.eql('7');\r",
+									"});\r",
+									"pm.test(\"Test order 'creationTime' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('creationTime');\r",
+									"    pm.expect(jsonData.creationTime, '\"creationTime\" field must be \"2023-09-21T13:49:00\"').to.eql('2023-09-21T13:49:00');\r",
+									"});\r",
+									"pm.test(\"Test order 'billTime field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('billTime');\r",
+									"    pm.expect(jsonData.billTime, '\"billTime\" field must be \"2023-09-21T19:00:00\"').to.eql('2023-09-21T19:00:00');    \r",
+									"});\r",
+									"pm.test(\"Test order 'total' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('total');\r",
+									"    pm.expect(jsonData.total, '\"total\" field must be 6549.00').to.eql(6549.00);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"table_num\": \"19\",\r\n    \"guests\": \"7\",\r\n    \"creation_time\": \"2023-09-21T13:49:00\",\r\n    \"bill_time\": \"2023-09-21T19:00:00\",\r\n    \"total\": 6549.00\r\n}"
+						},
+						"url": "{{baseUrl}}/order"
+					},
+					"response": []
+				},
+				{
+					"name": "delete order id 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200,204]);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/order/:orderId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"order",
+								":orderId"
+							],
+							"variable": [
+								{
+									"key": "orderId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get order id 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 or 201\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200,201]);\r",
+									"});\r",
+									"pm.test(\"Get order response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Test order 'orderId' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('orderId');\r",
+									"    pm.expect(jsonData.orderId, '\"orderId\" must be 2').to.eql(2);\r",
+									"});\r",
+									"pm.test(\"Test order 'tableNum' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('tableNum');\r",
+									"    pm.expect(jsonData.tableNum, '\"tableNum\" must be 19').to.eql('19');\r",
+									"});\r",
+									"pm.test(\"Test order 'guests' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('guests');\r",
+									"    pm.expect(jsonData.guests, '\"guests\" must be 7').to.eql('7');\r",
+									"});\r",
+									"pm.test(\"Test order 'creationTime' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('creationTime');\r",
+									"    pm.expect(jsonData.creationTime, '\"creationTime\" field must be \"2023-09-21T13:49:00\"').to.eql('2023-09-21T13:49:00');\r",
+									"});\r",
+									"pm.test(\"Test order 'billTime field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('billTime');\r",
+									"    pm.expect(jsonData.billTime, '\"billTime\" field must be \"2023-09-21T19:00:00\"').to.eql('2023-09-21T19:00:00');    \r",
+									"});\r",
+									"pm.test(\"Test order 'total' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData).to.have.property('total');\r",
+									"    pm.expect(jsonData.total, '\"total\" field must be 6549.00').to.eql(6549.00);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/order/:orderId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"order",
+								":orderId"
+							],
+							"variable": [
+								{
+									"key": "orderId",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "fail get order with unknown id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									"pm.test(\"Has error response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/order/:orderId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"order",
+								":orderId"
+							],
+							"variable": [
+								{
+									"key": "orderId",
+									"value": "999"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get orders list",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.be.ok;\r",
+									"});\r",
+									"pm.test(\"Test list dish response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.length, 'List length must be 1').to.eql(1);\r",
+									"});\r",
+									"pm.test(\"Test order[0] 'orderId' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData[0]).to.have.property('orderId');\r",
+									"    pm.expect(jsonData[0].orderId, '\"orderId\" must be 2').to.eql(2);\r",
+									"});\r",
+									"pm.test(\"Test order[0] 'tableNum' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData[0]).to.have.property('tableNum');\r",
+									"    pm.expect(jsonData[0].tableNum, '\"tableNum\" must be 19').to.eql('19');\r",
+									"});\r",
+									"pm.test(\"Test order[0] 'guests' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData[0]).to.have.property('guests');\r",
+									"    pm.expect(jsonData[0].guests, '\"guests\" must be 7').to.eql('7');\r",
+									"});\r",
+									"pm.test(\"Test order[0] 'creationTime' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData[0]).to.have.property('creationTime');\r",
+									"    pm.expect(jsonData[0].creationTime, '\"creationTime\" field must be \"2023-09-21T13:49:00\"').to.eql('2023-09-21T13:49:00');\r",
+									"});\r",
+									"pm.test(\"Test order[0] 'billTime field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData[0]).to.have.property('billTime');\r",
+									"    pm.expect(jsonData[0].billTime, '\"billTime\" field must be \"2023-09-21T19:00:00\"').to.eql('2023-09-21T19:00:00');    \r",
+									"});\r",
+									"pm.test(\"Test order[0] 'total' field\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData[0]).to.have.property('total');\r",
+									"    pm.expect(jsonData[0].total, '\"total\" field must be 6549.00').to.eql(6549.00);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*",
+								"type": "text"
+							}
+						],
+						"url": "{{baseUrl}}/order"
+					},
+					"response": []
+				},
+				{
+					"name": "delete all orders",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200,204]);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*",
+								"type": "text"
+							}
+						],
+						"url": "{{baseUrl}}/order"
+					},
+					"response": []
+				},
+				{
+					"name": "get empty order list",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.be.ok;\r",
+									"});\r",
+									"pm.test(\"Test list order response\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.length, 'List length must be 0').to.eql(0);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*",
+								"type": "text"
+							}
+						],
+						"url": "{{baseUrl}}/order"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080",
+			"type": "string"
+		}
+	]
+}
