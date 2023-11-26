@@ -3,7 +3,7 @@ package com.waiter.javawaiter.dish.service;
 import com.waiter.javawaiter.dish.dto.DishShortDto;
 import com.waiter.javawaiter.dish.mapper.DishMapper;
 import com.waiter.javawaiter.dish.model.Dish;
-import com.waiter.javawaiter.dish.storage.DishRepository;
+import com.waiter.javawaiter.dish.repository.DishRepository;
 import com.waiter.javawaiter.exception.AlreadyExistsException;
 import com.waiter.javawaiter.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;

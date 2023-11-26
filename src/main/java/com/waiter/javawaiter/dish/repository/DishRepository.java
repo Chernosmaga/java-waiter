@@ -1,4 +1,4 @@
-package com.waiter.javawaiter.dish.storage;
+package com.waiter.javawaiter.dish.repository;
 
 import com.waiter.javawaiter.dish.model.Dish;
 import com.waiter.javawaiter.enums.Type;

@@ -3,7 +3,7 @@ package com.waiter.javawaiter.dish;
 import com.waiter.javawaiter.dish.dto.DishShortDto;
 import com.waiter.javawaiter.dish.mapper.DishMapper;
 import com.waiter.javawaiter.dish.model.Dish;
-import com.waiter.javawaiter.dish.service.DishServiceImpl;
+import com.waiter.javawaiter.dish.service.DishService;
 import com.waiter.javawaiter.enums.Status;
 import com.waiter.javawaiter.enums.Type;
 import com.waiter.javawaiter.exception.AlreadyExistsException;
@@ -23,11 +23,11 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-@AutoConfigureTestDatabase
 @Transactional
+@AutoConfigureTestDatabase
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class DishServiceImplTest {
-    private final DishServiceImpl service;
+    private final DishService service;
     private final DishMapper mapper;
 
     private final DishShortDto dishShortDto =

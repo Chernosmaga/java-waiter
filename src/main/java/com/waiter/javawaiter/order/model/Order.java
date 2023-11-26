@@ -1,6 +1,7 @@
 package com.waiter.javawaiter.order.model;
 
 import com.waiter.javawaiter.dish.model.Dish;
+import com.waiter.javawaiter.employee.model.Employee;
 import com.waiter.javawaiter.enums.Status;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -26,7 +27,9 @@ public class Order {
             joinColumns = @JoinColumn(name = "dish_id"),
             inverseJoinColumns = @JoinColumn(name = "order_id"))
     private List<Dish> dishes;
-    private String employee;
+    @ManyToOne
+    @JoinColumn(name = "employee_id")
+    private Employee employee;
     private Status status;
     @Column(name = "creation_time")
     private LocalDateTime creationTime;

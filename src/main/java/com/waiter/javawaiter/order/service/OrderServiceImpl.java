@@ -1,8 +1,10 @@
 package com.waiter.javawaiter.order.service;
 
 import com.waiter.javawaiter.dish.model.Dish;
-import com.waiter.javawaiter.dish.storage.DishRepository;
+import com.waiter.javawaiter.dish.repository.DishRepository;
+import com.waiter.javawaiter.employee.repository.EmployeeRepository;
 import com.waiter.javawaiter.enums.Status;
+import com.waiter.javawaiter.exception.AccessViolationException;
 import com.waiter.javawaiter.exception.NotFoundException;
 import com.waiter.javawaiter.exception.ValidationViolationException;
 import com.waiter.javawaiter.order.dto.OrderDto;
@@ -26,21 +28,18 @@ import java.util.stream.Collectors;
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final DishRepository dishRepository;
+    private final EmployeeRepository employeeRepository;
     private final OrderMapper orderMapper;
 
     @Override
     public OrderDto create(Long employeeId, OrderShortDto order, LocalDateTime localDateTime) {
-//        после добавления employee, сделать запрос на поиск в БД
         log.info("createOrder({}, {}, {})", employeeId, order, localDateTime);
-        if (employeeId <= 0) {
-            throw new NotFoundException("Пользователя не существует");
-        }
-        Order thisOrder = orderMapper.toOrder(order);
-        log.info("Заказ выглядит вот так: {}", thisOrder);
+        var employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
+        var thisOrder = orderMapper.toOrder(order);
         List<Optional<Dish>> dishes = order.getDishes().stream().map(dishRepository::findById).toList();
-        log.info("Список блюд выглядит вот так: {}", dishes);
         thisOrder.setDishes(dishes.stream().flatMap(Optional::stream).filter(Objects::nonNull).toList());
-        thisOrder.setEmployee("Работник");
+        thisOrder.setEmployee(employee);
         thisOrder.setStatus(Status.CREATED);
         thisOrder.setBillTime(null);
         thisOrder.setTotal(null);
@@ -51,11 +50,8 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDto update(Long employeeId, Long orderId, OrderShortDto order) {
         log.info("updateOrder({}, {}, {})", employeeId, order, orderId);
-        Order thisOrder = orderRepository.findById(orderId).orElseThrow(() -> new NotFoundException("Заказ не найден"));
-//        после добавления employee, сделать запрос на поиск в БД
-        if (employeeId <= 0) {
-            throw new NotFoundException("Пользователь не найден");
-        }
+        isAcceptable(employeeId, orderId);
+        var thisOrder = orderRepository.findById(orderId).orElseThrow(() -> new NotFoundException("Заказ не найден"));
         if (order.getGuests() != null) {
             thisOrder.setGuests(order.getGuests());
         }
@@ -80,13 +76,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void deleteById(Long employeeId, Long orderId) {
         log.info("deleteOrderById({}, {})", employeeId, orderId);
-//        после добавления employee, сделать запрос на поиск в БД
-        if (employeeId == 0) {
-            throw new NotFoundException("Пользователя не существует");
-        }
-        if (!orderRepository.existsById(orderId)) {
-            throw new NotFoundException("Заказ не найден");
-        }
+        isAcceptable(employeeId, orderId);
         orderRepository.deleteById(orderId);
         log.info("Заказ с идентификатором {} удален пользователем с идентификатором {}", orderId, employeeId);
     }
@@ -94,6 +84,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void deleteOrders(Long employeeId) {
         log.info("deleteOrders({})", employeeId);
+        var employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
+        if (!employee.getIsAdmin()) {
+            throw new AccessViolationException("Нет доступа");
+        }
         orderRepository.deleteAll();
         log.info("Список заказов очищен пользователем с идентификатором: {}", employeeId);
     }
@@ -101,10 +96,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDto getById(Long employeeId, Long orderId) {
         log.info("getOrderById({}, {})", employeeId, orderId);
-//        после добавления employee, сделать запрос на поиск в БД
-        if (employeeId == 0) {
-            throw new NotFoundException("Пользователя не существует");
-        }
+        isAcceptable(employeeId, orderId);
         Order thisOrder = orderRepository.findById(orderId).orElseThrow(() -> new NotFoundException("Заказ не найден"));
         log.info("Возвращено блюдо: {}, по запросу пользователя с идентификатором {}", orderId, employeeId);
         return orderMapper.toOrderDto(thisOrder);
@@ -113,12 +105,23 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<OrderDto> getOrders(Long employeeId) {
         log.info("Запрос на получение списка заказов от пользователя: {}", employeeId);
-//        после добавления employee, сделать запрос на поиск в БД
-        if (employeeId == 0) {
-            throw new NotFoundException("Пользователя не существует");
+        var employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
+        if (!employee.getIsAdmin()) {
+            throw new AccessViolationException("Нет доступа к изменению заказа");
         }
         List<Order> orders = orderRepository.findAll();
         log.info("Возвращён список заказов: {}", orders);
-        return orders.stream().map(orderMapper::toOrderDto).collect(Collectors.toList());
+        return orders.stream().filter(order -> !Objects.equals(order.getEmployee().getEmployeeId(), employeeId))
+                .map(orderMapper::toOrderDto).collect(Collectors.toList());
+    }
+
+    private void isAcceptable(Long employeeId, Long orderId) {
+        var employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
+        var thisOrder = orderRepository.findById(orderId).orElseThrow(() -> new NotFoundException("Заказ не найден"));
+        if (!thisOrder.getEmployee().getEmployeeId().equals(employeeId) || !employee.getIsAdmin()) {
+            throw new AccessViolationException("Нет доступа к изменению заказа");
+        }
     }
 }

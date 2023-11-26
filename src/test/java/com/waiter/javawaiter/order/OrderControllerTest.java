@@ -2,6 +2,7 @@ package com.waiter.javawaiter.order;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.waiter.javawaiter.dish.dto.DishShortDto;
+import com.waiter.javawaiter.employee.dto.EmployeeShortDto;
 import com.waiter.javawaiter.enums.Status;
 import com.waiter.javawaiter.enums.Type;
 import com.waiter.javawaiter.order.controller.OrderController;
@@ -40,10 +41,12 @@ public class OrderControllerTest {
     private final DishShortDto dishShortDto =
             new DishShortDto(1L, "Свекольник", true, 5, 15L, 300.0,
                     Type.KITCHEN);
+    private final EmployeeShortDto employeeDto = new EmployeeShortDto(2L, "89601234567",
+            "Maria", "Makarova");
     private final OrderShortDto orderShortDto = new OrderShortDto(1L, 3,
             new ArrayList<>(List.of(dishShortDto.getDishId())), LocalDateTime.now());
     private final OrderDto orderDto = new OrderDto(1L, 3,
-            new ArrayList<>(List.of(dishShortDto.getDishId())), "Работник", Status.CREATED,
+            new ArrayList<>(List.of(dishShortDto.getDishId())), employeeDto, Status.CREATED,
             LocalDateTime.now(), null, null);
 
     @Test
@@ -62,7 +65,11 @@ public class OrderControllerTest {
                 .andExpect(jsonPath("$.orderId", is(orderDto.getOrderId()), Long.class))
                 .andExpect(jsonPath("$.guests", is(orderDto.getGuests())))
                 .andExpect(jsonPath("$.dishes.[0]", is(dishShortDto.getDishId()), Long.class))
-                .andExpect(jsonPath("$.employee", is(orderDto.getEmployee())))
+                .andExpect(jsonPath("$.employee.employeeId",
+                        is(orderDto.getEmployee().getEmployeeId()), Long.class))
+                .andExpect(jsonPath("$.employee.phone", is(orderDto.getEmployee().getPhone())))
+                .andExpect(jsonPath("$.employee.firstName", is(orderDto.getEmployee().getFirstName())))
+                .andExpect(jsonPath("$.employee.surname", is(orderDto.getEmployee().getSurname())))
                 .andExpect(jsonPath("$.status", is(orderDto.getStatus().toString())))
                 .andExpect(jsonPath("$.creationTime",
                         is(orderDto.getCreationTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))))
@@ -76,7 +83,7 @@ public class OrderControllerTest {
         OrderShortDto thisOrderShortDto = new OrderShortDto(1L, 5,
                 new ArrayList<>(List.of(dishShortDto.getDishId())), LocalDateTime.now());
         OrderDto thisOrderDto = new OrderDto(1L, 5,
-                new ArrayList<>(List.of(dishShortDto.getDishId())), "Работник", Status.CREATED,
+                new ArrayList<>(List.of(dishShortDto.getDishId())), employeeDto, Status.CREATED,
                 LocalDateTime.now(), null, null);
 
         when(orderService.update(any(Long.class), any(Long.class), any()))
@@ -92,7 +99,11 @@ public class OrderControllerTest {
                 .andExpect(jsonPath("$.orderId", is(thisOrderDto.getOrderId()), Long.class))
                 .andExpect(jsonPath("$.guests", is(thisOrderDto.getGuests())))
                 .andExpect(jsonPath("$.dishes.[0]", is(dishShortDto.getDishId()), Long.class))
-                .andExpect(jsonPath("$.employee", is(thisOrderDto.getEmployee())))
+                .andExpect(jsonPath("$.employee.employeeId",
+                        is(orderDto.getEmployee().getEmployeeId()), Long.class))
+                .andExpect(jsonPath("$.employee.phone", is(orderDto.getEmployee().getPhone())))
+                .andExpect(jsonPath("$.employee.firstName", is(orderDto.getEmployee().getFirstName())))
+                .andExpect(jsonPath("$.employee.surname", is(orderDto.getEmployee().getSurname())))
                 .andExpect(jsonPath("$.status", is(thisOrderDto.getStatus().toString())))
                 .andExpect(jsonPath("$.creationTime",
                         is(thisOrderDto.getCreationTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))))
@@ -124,7 +135,11 @@ public class OrderControllerTest {
                 .andExpect(jsonPath("$.orderId", is(orderDto.getOrderId()), Long.class))
                 .andExpect(jsonPath("$.guests", is(orderDto.getGuests())))
                 .andExpect(jsonPath("$.dishes.[0]", is(dishShortDto.getDishId()), Long.class))
-                .andExpect(jsonPath("$.employee", is(orderDto.getEmployee())))
+                .andExpect(jsonPath("$.employee.employeeId",
+                        is(orderDto.getEmployee().getEmployeeId()), Long.class))
+                .andExpect(jsonPath("$.employee.phone", is(orderDto.getEmployee().getPhone())))
+                .andExpect(jsonPath("$.employee.firstName", is(orderDto.getEmployee().getFirstName())))
+                .andExpect(jsonPath("$.employee.surname", is(orderDto.getEmployee().getSurname())))
                 .andExpect(jsonPath("$.status", is(orderDto.getStatus().toString())))
                 .andExpect(jsonPath("$.creationTime",
                         is(orderDto.getCreationTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))))
@@ -148,7 +163,11 @@ public class OrderControllerTest {
                 .andExpect(jsonPath("$.[0].orderId", is(orderDto.getOrderId()), Long.class))
                 .andExpect(jsonPath("$.[0].guests", is(orderDto.getGuests())))
                 .andExpect(jsonPath("$.[0].dishes.[0]", is(dishShortDto.getDishId()), Long.class))
-                .andExpect(jsonPath("$.[0].employee", is(orderDto.getEmployee())))
+                .andExpect(jsonPath("$.[0].employee.employeeId",
+                        is(orderDto.getEmployee().getEmployeeId()), Long.class))
+                .andExpect(jsonPath("$.[0].employee.phone", is(orderDto.getEmployee().getPhone())))
+                .andExpect(jsonPath("$.[0].employee.firstName", is(orderDto.getEmployee().getFirstName())))
+                .andExpect(jsonPath("$.[0].employee.surname", is(orderDto.getEmployee().getSurname())))
                 .andExpect(jsonPath("$.[0].status", is(orderDto.getStatus().toString())))
                 .andExpect(jsonPath("$.[0].creationTime",
                         is(orderDto.getCreationTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))))

@@ -1,7 +1,8 @@
 package com.waiter.javawaiter.order.mapper;
 
 import com.waiter.javawaiter.dish.model.Dish;
-import com.waiter.javawaiter.dish.storage.DishRepository;
+import com.waiter.javawaiter.dish.repository.DishRepository;
+import com.waiter.javawaiter.employee.mapper.EmployeeMapper;
 import com.waiter.javawaiter.order.dto.OrderDto;
 import com.waiter.javawaiter.order.dto.OrderShortDto;
 import com.waiter.javawaiter.order.model.Order;
@@ -16,12 +17,13 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class OrderMapper {
     private final DishRepository dishRepository;
+    private final EmployeeMapper mapper;
 
     public OrderDto toOrderDto(Order order) {
         return new OrderDto(order.getOrderId(),
                 order.getGuests(),
                 order.getDishes().stream().map(Dish::getDishId).collect(Collectors.toList()),
-                order.getEmployee(),
+                mapper.toEmployeeShortDto(order.getEmployee()),
                 order.getStatus(),
                 order.getCreationTime(),
                 order.getBillTime(),

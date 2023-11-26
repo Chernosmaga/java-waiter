@@ -1,5 +1,6 @@
 package com.waiter.javawaiter.order.dto;
 
+import com.waiter.javawaiter.employee.dto.EmployeeShortDto;
 import com.waiter.javawaiter.enums.Status;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,7 +16,7 @@ public class OrderDto {
     private Long orderId;
     private Integer guests;
     private List<Long> dishes;
-    private String employee;
+    private EmployeeShortDto employee;
     private Status status;
     private LocalDateTime creationTime;
     private LocalDateTime billTime;
