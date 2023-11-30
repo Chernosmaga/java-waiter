@@ -1,5 +1,6 @@
 package com.waiter.javawaiter.order.dto;
 
+import com.waiter.javawaiter.dish.dto.DishForOrderDto;
 import com.waiter.javawaiter.employee.dto.EmployeeShortDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,6 +14,6 @@ import java.util.List;
 public class OrderForAdminDto {
     private Long orderId;
     private Integer guests;
-    private List<Long> dishes;
+    private List<DishForOrderDto> dishes;
     private EmployeeShortDto employee;
 }

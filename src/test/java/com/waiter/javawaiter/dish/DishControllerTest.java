@@ -37,11 +37,9 @@ public class DishControllerTest {
     @Autowired
     private MockMvc mvc;
     private final DishShortDto dishShortDto =
-            new DishShortDto(1L, "Свекольник", true, 5, 15L, 300.0,
-                    Type.KITCHEN);
+            new DishShortDto(1L, "Свекольник", 5, 15L, 300.0, Type.KITCHEN);
     private final DishShortDto updatedDishShortDto =
-            new DishShortDto(1L, "Свекольник", true, 10, 15L, 300.0,
-                             Type.KITCHEN);
+            new DishShortDto(1L, "Свекольник", 10, 15L, 300.0, Type.KITCHEN);
 
     @Test
     @SneakyThrows
@@ -57,7 +55,6 @@ public class DishControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.dishId", is(dishShortDto.getDishId()), Long.class))
                 .andExpect(jsonPath("$.title", is(dishShortDto.getTitle())))
-                .andExpect(jsonPath("$.isAvailable", is(dishShortDto.getIsAvailable())))
                 .andExpect(jsonPath("$.quantity", is(dishShortDto.getQuantity())))
                 .andExpect(jsonPath("$.timeLimit", is(dishShortDto.getTimeLimit()), Long.class))
                 .andExpect(jsonPath("$.price", is(dishShortDto.getPrice()), Double.class))
@@ -69,26 +66,7 @@ public class DishControllerTest {
     @SneakyThrows
     void create_shouldThrowValidationExceptionIfTitleIsNull() {
         DishShortDto dishShortDto =
-                new DishShortDto(1L, " ", true, 5, 15L, 300.0,
-                        Type.KITCHEN);
-        when(dishService.create(any()))
-                .thenThrow(new ValidationException());
-
-        MockHttpServletResponse response = mvc.perform(post("/dish")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(dishShortDto)))
-                .andDo(MockMvcResultHandlers.print())
-                .andReturn().getResponse();
-
-        assertThat(response.getStatus(), is(equalTo(400)));
-    }
-
-    @Test
-    @SneakyThrows
-    void create_shouldThrowValidationExceptionIfIaAvailableIsNull() {
-        DishShortDto dishShortDto =
-                new DishShortDto(1L, "Свекольник", null, 5, 15L, 300.0,
-                        Type.KITCHEN);
+                new DishShortDto(1L, " ", 5, 15L, 300.0, Type.KITCHEN);
         when(dishService.create(any()))
                 .thenThrow(new ValidationException());
 
@@ -105,8 +83,7 @@ public class DishControllerTest {
     @SneakyThrows
     void create_shouldThrowValidationExceptionIfQuantityIsNegative() {
         DishShortDto dishShortDto =
-                new DishShortDto(1L, "Свекольник", true, -1, 15L, 300.0,
-                        Type.KITCHEN);
+                new DishShortDto(1L, "Свекольник", -1, 15L, 300.0, Type.KITCHEN);
         when(dishService.create(any()))
                 .thenThrow(new ValidationException());
 
@@ -123,8 +100,7 @@ public class DishControllerTest {
     @SneakyThrows
     void create_shouldThrowValidationExceptionIfTimeLimitIsNegative() {
         DishShortDto dishShortDto =
-                new DishShortDto(1L, "Свекольник", true, 5, -1L, 300.0,
-                        Type.KITCHEN);
+                new DishShortDto(1L, "Свекольник", 5, -1L, 300.0, Type.KITCHEN);
         when(dishService.create(any()))
                 .thenThrow(new ValidationException());
 
@@ -141,8 +117,7 @@ public class DishControllerTest {
     @SneakyThrows
     void create_shouldThrowValidationExceptionIfPriceIsNegative() {
         DishShortDto dishShortDto =
-                new DishShortDto(1L, "Свекольник", true, 5, 15L, -300.0,
-                        Type.KITCHEN);
+                new DishShortDto(1L, "Свекольник", 5, 15L, -300.0, Type.KITCHEN);
         when(dishService.create(any()))
                 .thenThrow(new ValidationException());
 
@@ -169,7 +144,6 @@ public class DishControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.dishId", is(updatedDishShortDto.getDishId()), Long.class))
                 .andExpect(jsonPath("$.title", is(updatedDishShortDto.getTitle())))
-                .andExpect(jsonPath("$.isAvailable", is(updatedDishShortDto.getIsAvailable())))
                 .andExpect(jsonPath("$.quantity", is(updatedDishShortDto.getQuantity())))
                 .andExpect(jsonPath("$.timeLimit", is(updatedDishShortDto.getTimeLimit()), Long.class))
                 .andExpect(jsonPath("$.price", is(updatedDishShortDto.getPrice()), Double.class))
@@ -186,7 +160,6 @@ public class DishControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.dishId", is(dishShortDto.getDishId()), Long.class))
                 .andExpect(jsonPath("$.title", is(dishShortDto.getTitle())))
-                .andExpect(jsonPath("$.isAvailable", is(dishShortDto.getIsAvailable())))
                 .andExpect(jsonPath("$.quantity", is(dishShortDto.getQuantity())))
                 .andExpect(jsonPath("$.timeLimit", is(dishShortDto.getTimeLimit()), Long.class))
                 .andExpect(jsonPath("$.price", is(dishShortDto.getPrice()), Double.class))
@@ -196,14 +169,13 @@ public class DishControllerTest {
     @Test
     @SneakyThrows
     void getDishes_shouldReturnListOfDishes() {
-        when(dishService.getDishes())
+        when(dishService.getDishes(any(Integer.class), any(Integer.class)))
                 .thenReturn(List.of(dishShortDto));
 
         mvc.perform(get("/dish"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.[0].dishId", is(dishShortDto.getDishId()), Long.class))
                 .andExpect(jsonPath("$.[0].title", is(dishShortDto.getTitle())))
-                .andExpect(jsonPath("$.[0].isAvailable", is(dishShortDto.getIsAvailable())))
                 .andExpect(jsonPath("$.[0].quantity", is(dishShortDto.getQuantity())))
                 .andExpect(jsonPath("$.[0].timeLimit", is(dishShortDto.getTimeLimit()), Long.class))
                 .andExpect(jsonPath("$.[0].price", is(dishShortDto.getPrice()), Double.class))
@@ -223,5 +195,4 @@ public class DishControllerTest {
         mvc.perform(delete("/dish").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
-
 }

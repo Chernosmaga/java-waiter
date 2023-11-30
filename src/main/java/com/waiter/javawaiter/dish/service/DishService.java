@@ -15,9 +15,6 @@ public interface DishService {
 
     DishShortDto getById(Long dishId);
 
-    List<DishShortDto> getDishes();
-
-    void addComments(Long orderId, Long dishId, String comment);
-
-    void updateStatus(Long dishId, Integer statusId);
+    List<DishShortDto> getDishes(int offset, int limit);
+    List<DishShortDto> search(String text, int offset, int limit);
 }

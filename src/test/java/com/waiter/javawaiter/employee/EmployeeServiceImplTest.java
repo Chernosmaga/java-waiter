@@ -258,4 +258,9 @@ public class EmployeeServiceImplTest {
 
         assertTrue(service.getEmployees(thisAdmin.getEmployeeId()).isEmpty());
     }
+
+    @Test
+    void get_shouldCatchExceptionAndReturnNotFoundException() {
+
+    }
 }

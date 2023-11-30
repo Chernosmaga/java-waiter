@@ -12,14 +12,12 @@ import lombok.NoArgsConstructor;
 @Table(name = "dish", schema = "public")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Dish {
+public class Dish implements Comparable<Dish> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "dish_id")
     private Long dishId;
     private String title;
-    @Column(name = "is_available")
-    private Boolean isAvailable;
     private Integer quantity;
     @Column(name = "time_limit")
     private Long timeLimit;
@@ -31,17 +29,20 @@ public class Dish {
 
     public Dish(Long dishId,
                 String title,
-                Boolean isAvailable,
                 Integer quantity,
                 Long timeLimit,
                 Double price,
                 Type type) {
         this.dishId = dishId;
         this.title = title;
-        this.isAvailable = isAvailable;
         this.quantity = quantity;
         this.timeLimit = timeLimit;
         this.price = price;
         this.type = type;
+    }
+
+    @Override
+    public int compareTo(Dish dish) {
+        return this.title.compareTo(dish.title);
     }
 }

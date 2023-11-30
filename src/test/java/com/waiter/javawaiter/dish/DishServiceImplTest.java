@@ -31,10 +31,9 @@ public class DishServiceImplTest {
     private final DishMapper mapper;
 
     private final DishShortDto dishShortDto =
-            new DishShortDto(1L, "Свекольник", true, 5, 15L, 300.0,
-                    Type.KITCHEN);
-    private final Dish dish = new Dish(1L, "Свекольник", true, 5, 15L,
-            300.0, Status.CREATED, Type.KITCHEN);
+            new DishShortDto(1L, "Свекольник", 5, 15L, 300.0, Type.KITCHEN);
+    private final Dish dish = new Dish(1L, "Свекольник", 5, 15L, 300.0,
+            Status.CREATED, Type.KITCHEN);
 
     @AfterEach
     void afterEach() {
@@ -76,19 +75,6 @@ public class DishServiceImplTest {
         Dish createdDish = mapper.toDish(savedDish);
         createdDish.setQuantity(10);
         createdDish.setTitle(" ");
-        DishShortDto updatedDish = service.update(mapper.toDishShortDto(createdDish));
-
-        assertThat(updatedDish.getDishId(), equalTo(createdDish.getDishId()));
-        assertThat(updatedDish.getQuantity(), equalTo(10));
-        assertThat(updatedDish.getTitle(), equalTo(createdDish.getTitle()));
-    }
-
-    @Test
-    void update_shouldUpdateDishIfIsAvailableIsNull() {
-        DishShortDto savedDish = service.create(dishShortDto);
-        Dish createdDish = mapper.toDish(savedDish);
-        createdDish.setQuantity(10);
-        createdDish.setIsAvailable(null);
         DishShortDto updatedDish = service.update(mapper.toDishShortDto(createdDish));
 
         assertThat(updatedDish.getDishId(), equalTo(createdDish.getDishId()));
@@ -154,7 +140,7 @@ public class DishServiceImplTest {
         Dish createdDish = mapper.toDish(savedDish);
         service.deleteById(createdDish.getDishId());
 
-        assertTrue(service.getDishes().isEmpty());
+        assertTrue(service.getDishes(1, 10).isEmpty());
     }
 
     @Test
@@ -168,7 +154,7 @@ public class DishServiceImplTest {
         mapper.toDish(savedDish);
         service.deleteDishes();
 
-        assertTrue(service.getDishes().isEmpty());
+        assertTrue(service.getDishes(0, 10).isEmpty());
     }
 
     @Test
@@ -189,7 +175,7 @@ public class DishServiceImplTest {
     void getDishes_shouldReturnListOfDishes() {
         DishShortDto savedDish = service.create(dishShortDto);
         Dish createdDish = mapper.toDish(savedDish);
-        List<DishShortDto> dishList = service.getDishes();
+        List<DishShortDto> dishList = service.getDishes(0, 10);
 
         assertFalse(dishList.isEmpty());
         assertTrue(dishList.contains(mapper.toDishShortDto(createdDish)));
@@ -197,8 +183,31 @@ public class DishServiceImplTest {
 
     @Test
     void getDishes_shouldReturnEmptyListOfDishes() {
-        List<DishShortDto> dishList = service.getDishes();
+        List<DishShortDto> dishList = service.getDishes(0, 10);
 
         assertTrue(dishList.isEmpty());
+    }
+
+    @Test
+    void search_shouldFindADish() {
+        DishShortDto savedDish = service.create(dishShortDto);
+        List<DishShortDto> dishes = service.search("свеко", 0, 10);
+
+        assertFalse(dishes.isEmpty());
+        assertTrue(dishes.contains(savedDish));
+    }
+
+    @Test
+    void search_shouldReturnEmptyListIfDishTextIsNull() {
+        List<DishShortDto> dishes = service.search(" ", 0, 10);
+
+        assertTrue(dishes.isEmpty());
+    }
+
+    @Test
+    void search_shouldReturnEmptyListIfDishDoesntExists() {
+        List<DishShortDto> dishes = service.search("Свекольник", 0, 10);
+
+        assertTrue(dishes.isEmpty());
     }
 }
