@@ -1,4 +1,4 @@
-package com.waiter.javawaiter.model;
+package com.waiter.javawaiter.exception.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

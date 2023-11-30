@@ -1,3 +1,8 @@
+INSERT INTO type (type_name)
+VALUES ('КУХНЯ');
+INSERT INTO type (type_name)
+VALUES ('БАР');
+
 INSERT INTO status (status_name)
 VALUES ('СОЗДАН');
 INSERT INTO status (status_name)

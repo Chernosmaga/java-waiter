@@ -4,8 +4,9 @@ import com.waiter.javawaiter.exception.AlreadyExistsException;
 import com.waiter.javawaiter.exception.InternalServerException;
 import com.waiter.javawaiter.exception.NotAdminException;
 import com.waiter.javawaiter.exception.NotFoundException;
-import com.waiter.javawaiter.model.ErrorResponse;
+import com.waiter.javawaiter.exception.model.ErrorResponse;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -16,6 +17,12 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleNotFoundException(final NotFoundException exception) {
+        return new ErrorResponse(exception.getMessage());
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleMethodArgumentNotValidException(final MethodArgumentNotValidException exception) {
         return new ErrorResponse(exception.getMessage());
     }
 
