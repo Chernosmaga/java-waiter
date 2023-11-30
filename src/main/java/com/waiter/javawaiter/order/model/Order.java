@@ -2,7 +2,6 @@ package com.waiter.javawaiter.order.model;
 
 import com.waiter.javawaiter.dish.model.Dish;
 import com.waiter.javawaiter.employee.model.Employee;
-import com.waiter.javawaiter.enums.Status;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,12 +29,11 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "employee_id")
     private Employee employee;
-    private Status status;
     @Column(name = "creation_time")
     private LocalDateTime creationTime;
     @Column(name = "bill_time")
     private LocalDateTime billTime;
-    private Integer total;
+    private Double total;
 
     public Order(Long orderId, Integer guests, List<Dish> dishes, LocalDateTime creationTime) {
         this.orderId = orderId;

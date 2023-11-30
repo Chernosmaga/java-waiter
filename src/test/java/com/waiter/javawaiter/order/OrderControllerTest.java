@@ -1,9 +1,9 @@
 package com.waiter.javawaiter.order;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.waiter.javawaiter.dish.dto.DishShortDto;
+import com.waiter.javawaiter.comment.dto.CommentShortDto;
+import com.waiter.javawaiter.dish.dto.DishForOrderDto;
 import com.waiter.javawaiter.employee.dto.EmployeeShortDto;
-import com.waiter.javawaiter.enums.Status;
 import com.waiter.javawaiter.enums.Type;
 import com.waiter.javawaiter.order.controller.OrderController;
 import com.waiter.javawaiter.order.dto.OrderDto;
@@ -38,16 +38,14 @@ public class OrderControllerTest {
     private ObjectMapper mapper;
     @Autowired
     private MockMvc mvc;
-    private final DishShortDto dishShortDto =
-            new DishShortDto(1L, "Свекольник", true, 5, 15L, 300.0,
-                    Type.KITCHEN);
+    private final DishForOrderDto dish = new DishForOrderDto(1L, "Свекольник", 300.0,
+                    new CommentShortDto(1L, "Без сметаны"), Type.KITCHEN);
     private final EmployeeShortDto employeeDto = new EmployeeShortDto(2L, "89601234567",
             "Maria", "Makarova");
     private final OrderShortDto orderShortDto = new OrderShortDto(1L, 3,
-            new ArrayList<>(List.of(dishShortDto.getDishId())), LocalDateTime.now());
+            new ArrayList<>(List.of(dish)), LocalDateTime.now());
     private final OrderDto orderDto = new OrderDto(1L, 3,
-            new ArrayList<>(List.of(dishShortDto.getDishId())), employeeDto, Status.CREATED,
-            LocalDateTime.now(), null, null);
+            new ArrayList<>(List.of(dish)), employeeDto, LocalDateTime.now(), null, null);
 
     @Test
     @SneakyThrows
@@ -64,13 +62,12 @@ public class OrderControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.orderId", is(orderDto.getOrderId()), Long.class))
                 .andExpect(jsonPath("$.guests", is(orderDto.getGuests())))
-                .andExpect(jsonPath("$.dishes.[0]", is(dishShortDto.getDishId()), Long.class))
+                .andExpect(jsonPath("$.dishes.[0].dishId", is(dish.getDishId()), Long.class))
                 .andExpect(jsonPath("$.employee.employeeId",
                         is(orderDto.getEmployee().getEmployeeId()), Long.class))
                 .andExpect(jsonPath("$.employee.phone", is(orderDto.getEmployee().getPhone())))
                 .andExpect(jsonPath("$.employee.firstName", is(orderDto.getEmployee().getFirstName())))
                 .andExpect(jsonPath("$.employee.surname", is(orderDto.getEmployee().getSurname())))
-                .andExpect(jsonPath("$.status", is(orderDto.getStatus().toString())))
                 .andExpect(jsonPath("$.creationTime",
                         is(orderDto.getCreationTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))))
                 .andExpect(jsonPath("$.billTime", is(orderDto.getBillTime())))
@@ -81,10 +78,9 @@ public class OrderControllerTest {
     @SneakyThrows
     void update_shouldUpdateOrder() {
         OrderShortDto thisOrderShortDto = new OrderShortDto(1L, 5,
-                new ArrayList<>(List.of(dishShortDto.getDishId())), LocalDateTime.now());
+                new ArrayList<>(List.of(dish)), LocalDateTime.now());
         OrderDto thisOrderDto = new OrderDto(1L, 5,
-                new ArrayList<>(List.of(dishShortDto.getDishId())), employeeDto, Status.CREATED,
-                LocalDateTime.now(), null, null);
+                new ArrayList<>(List.of(dish)), employeeDto, LocalDateTime.now(), null, null);
 
         when(orderService.update(any(Long.class), any(Long.class), any()))
                 .thenReturn(thisOrderDto);
@@ -98,13 +94,12 @@ public class OrderControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.orderId", is(thisOrderDto.getOrderId()), Long.class))
                 .andExpect(jsonPath("$.guests", is(thisOrderDto.getGuests())))
-                .andExpect(jsonPath("$.dishes.[0]", is(dishShortDto.getDishId()), Long.class))
+                .andExpect(jsonPath("$.dishes.[0].dishId", is(dish.getDishId()), Long.class))
                 .andExpect(jsonPath("$.employee.employeeId",
                         is(orderDto.getEmployee().getEmployeeId()), Long.class))
                 .andExpect(jsonPath("$.employee.phone", is(orderDto.getEmployee().getPhone())))
                 .andExpect(jsonPath("$.employee.firstName", is(orderDto.getEmployee().getFirstName())))
                 .andExpect(jsonPath("$.employee.surname", is(orderDto.getEmployee().getSurname())))
-                .andExpect(jsonPath("$.status", is(thisOrderDto.getStatus().toString())))
                 .andExpect(jsonPath("$.creationTime",
                         is(thisOrderDto.getCreationTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))))
                 .andExpect(jsonPath("$.billTime", is(thisOrderDto.getBillTime())))
@@ -134,13 +129,12 @@ public class OrderControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.orderId", is(orderDto.getOrderId()), Long.class))
                 .andExpect(jsonPath("$.guests", is(orderDto.getGuests())))
-                .andExpect(jsonPath("$.dishes.[0]", is(dishShortDto.getDishId()), Long.class))
+                .andExpect(jsonPath("$.dishes.[0].dishId", is(dish.getDishId()), Long.class))
                 .andExpect(jsonPath("$.employee.employeeId",
                         is(orderDto.getEmployee().getEmployeeId()), Long.class))
                 .andExpect(jsonPath("$.employee.phone", is(orderDto.getEmployee().getPhone())))
                 .andExpect(jsonPath("$.employee.firstName", is(orderDto.getEmployee().getFirstName())))
                 .andExpect(jsonPath("$.employee.surname", is(orderDto.getEmployee().getSurname())))
-                .andExpect(jsonPath("$.status", is(orderDto.getStatus().toString())))
                 .andExpect(jsonPath("$.creationTime",
                         is(orderDto.getCreationTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))))
                 .andExpect(jsonPath("$.billTime", is(orderDto.getBillTime())))
@@ -150,7 +144,7 @@ public class OrderControllerTest {
     @Test
     @SneakyThrows
     void getOrders_shouldReturnOrders() {
-        when(orderService.getOrders(any(Long.class)))
+        when(orderService.getOrders(any(Long.class), any(Integer.class), any(Integer.class)))
                 .thenReturn(List.of(orderDto));
 
         mvc.perform(get("/order")
@@ -162,13 +156,12 @@ public class OrderControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.[0].orderId", is(orderDto.getOrderId()), Long.class))
                 .andExpect(jsonPath("$.[0].guests", is(orderDto.getGuests())))
-                .andExpect(jsonPath("$.[0].dishes.[0]", is(dishShortDto.getDishId()), Long.class))
+                .andExpect(jsonPath("$.[0].dishes.[0].dishId", is(dish.getDishId()), Long.class))
                 .andExpect(jsonPath("$.[0].employee.employeeId",
                         is(orderDto.getEmployee().getEmployeeId()), Long.class))
                 .andExpect(jsonPath("$.[0].employee.phone", is(orderDto.getEmployee().getPhone())))
                 .andExpect(jsonPath("$.[0].employee.firstName", is(orderDto.getEmployee().getFirstName())))
                 .andExpect(jsonPath("$.[0].employee.surname", is(orderDto.getEmployee().getSurname())))
-                .andExpect(jsonPath("$.[0].status", is(orderDto.getStatus().toString())))
                 .andExpect(jsonPath("$.[0].creationTime",
                         is(orderDto.getCreationTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))))
                 .andExpect(jsonPath("$.[0].billTime", is(orderDto.getBillTime())))

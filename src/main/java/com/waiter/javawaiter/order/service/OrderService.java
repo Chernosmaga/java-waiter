@@ -10,7 +10,6 @@ public interface OrderService {
     OrderDto create(Long employeeId, OrderShortDto order, LocalDateTime localDateTime);
     OrderDto update(Long employeeId, Long orderId, OrderShortDto order);
     void deleteById(Long employeeId, Long orderId);
-    void deleteOrders(Long employeeId);
     OrderDto getById(Long employeeId, Long orderId);
-    List<OrderDto> getOrders(Long employeeId);
+    List<OrderDto> getOrders(Long employeeId, int offset, int limit);
 }

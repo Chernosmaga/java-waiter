@@ -8,8 +8,12 @@ import com.waiter.javawaiter.exception.AlreadyExistsException;
 import com.waiter.javawaiter.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -63,25 +67,25 @@ public class DishServiceImpl implements DishService {
     }
 
     @Override
-    public List<DishShortDto> getDishes() {
+    public List<DishShortDto> getDishes(int offset, int limit) {
         log.debug("getDishList()");
+        PageRequest page = PageRequest.of(offset, limit);
         List<DishShortDto> dishes =
-                dishRepository.findAll().stream().map(mapper::toDishShortDto).collect(Collectors.toList());
+                dishRepository.findAll(page).stream().map(mapper::toDishShortDto).collect(Collectors.toList());
         log.info("Возвращён список всех блюд: {}", dishes);
         return dishes;
     }
 
     @Override
-    public void addComments(Long orderId, Long dishId, String comment) {
-//        TODO
-//        log.debug("addComments({}, {})", dishId, comment);
-//        dishRepository.addComments(orderId, dishId, comment);
-//        log.info("Добавлен комментарий {} к блюду {} у заказа {}", comment, dishId, orderId);
-    }
-
-    @Override
-    public void updateStatus(Long dishId, Integer statusId) {
-//        TODO
+    public List<DishShortDto> search(String text, int offset, int limit) {
+        log.debug("search({}, {}, {})", text, offset, limit);
+        if (text.isEmpty() || text.isBlank()) {
+            return new ArrayList<>();
+        }
+        PageRequest page = PageRequest.of(offset, limit);
+        Page<Dish> list = dishRepository.findDishesByTitleContainingIgnoreCase(text, page);
+        return list.stream().sorted(Comparator.reverseOrder()).map(mapper::toDishShortDto)
+                .collect(Collectors.toList());
     }
 
     private Dish validate(Dish dish) {
@@ -89,12 +93,6 @@ public class DishServiceImpl implements DishService {
         newDish.setDishId(dish.getDishId());
         if (dish.getTitle() != null) {
             newDish.setTitle(dish.getTitle());
-        }
-        if (dish.getIsAvailable() != null) {
-            newDish.setIsAvailable(dish.getIsAvailable());
-        }
-        if (dish.getIsAvailable() != null) {
-            newDish.setIsAvailable(dish.getIsAvailable());
         }
         if (dish.getQuantity() != null) {
             newDish.setQuantity(dish.getQuantity());

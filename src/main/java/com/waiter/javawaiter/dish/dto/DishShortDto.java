@@ -15,8 +15,6 @@ public class DishShortDto {
     private Long dishId;
     @NotBlank(message = "Название блюда не может быть пустым")
     private String title;
-    @NotNull(message = "Статус наличия не может быть пустым")
-    private Boolean isAvailable;
     @PositiveOrZero(message = "Количество блюда не должно быть отрицательным")
     private Integer quantity;
     @PositiveOrZero(message = "Ограничение по времени не может быть отрицательным")

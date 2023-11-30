@@ -35,19 +35,16 @@ public class OrderController {
         orderService.deleteById(employeeId, orderId);
     }
 
-    @DeleteMapping
-    public void deleteOrders(@RequestHeader("Employee_Id") Long employeeId) {
-        orderService.deleteOrders(employeeId);
-    }
-
     @GetMapping("/{orderId}")
     public OrderDto getById(@RequestHeader("Employee-Id") Long employeeId,
-                        @PathVariable Long orderId) {
+                            @PathVariable Long orderId) {
         return orderService.getById(employeeId, orderId);
     }
 
     @GetMapping
-    public List<OrderDto> getOrders(@RequestHeader("Employee-Id") Long employeeId) {
-        return orderService.getOrders(employeeId);
+    public List<OrderDto> getOrders(@RequestHeader("Employee-Id") Long employeeId,
+                                    @RequestParam(defaultValue = "0") int offset,
+                                    @RequestParam(required = false, defaultValue = "10") int limit) {
+        return orderService.getOrders(employeeId, offset, limit);
     }
 }

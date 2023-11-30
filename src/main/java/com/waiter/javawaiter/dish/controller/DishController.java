@@ -25,8 +25,9 @@ public class DishController {
     }
 
     @GetMapping
-    public List<DishShortDto> getDishes() {
-        return dishService.getDishes();
+    public List<DishShortDto> getDishes(@RequestParam(defaultValue = "0") int offset,
+                                        @RequestParam(required = false, defaultValue = "10") int limit) {
+        return dishService.getDishes(offset, limit);
     }
 
     @GetMapping("/{dishId}")
@@ -44,8 +45,10 @@ public class DishController {
         dishService.deleteDishes();
     }
 
-    @PostMapping("/{orderId}")
-    public void addComments() {
-//        TODO
+    @GetMapping("/search")
+    public List<DishShortDto> search(@RequestParam("text") String text,
+                                     @RequestParam(name = "offset", defaultValue = "0") int offset,
+                                     @RequestParam(name = "limit", required = false, defaultValue = "10") int limit) {
+        return dishService.search(text, offset, limit);
     }
 }
