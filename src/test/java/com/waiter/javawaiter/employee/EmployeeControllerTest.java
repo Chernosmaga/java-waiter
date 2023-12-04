@@ -7,6 +7,7 @@ import com.waiter.javawaiter.employee.dto.EmployeeForAdminDto;
 import com.waiter.javawaiter.employee.dto.EmployeeShortDto;
 import com.waiter.javawaiter.employee.service.EmployeeService;
 import com.waiter.javawaiter.exception.ValidationViolationException;
+import com.waiter.javawaiter.tip.model.Tip;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -21,6 +22,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -45,6 +47,7 @@ public class EmployeeControllerTest {
             "Maria", "Makarova", true, false);
     private final EmployeeShortDto employeeShortDto = new EmployeeShortDto(2L, "89601234567",
             "Maria", "Makarova");
+    private final Tip tip = new Tip(1L, "https://qr-code-tip.com");
 
     @Test
     @SneakyThrows
@@ -178,5 +181,47 @@ public class EmployeeControllerTest {
                 .andExpect(jsonPath("$.[0].phone", is(employeeDto.getPhone())))
                 .andExpect(jsonPath("$.[0].firstName", is(employeeDto.getFirstName())))
                 .andExpect(jsonPath("$.[0].surname", is(employeeDto.getSurname())));
+    }
+
+    @Test
+    @SneakyThrows
+    void addTip_shouldAddTip() {
+        when(employeeService.addTip(anyLong(), any()))
+                .thenReturn(tip);
+
+        mvc.perform(post("/employee/tip")
+                        .content(mapper.writeValueAsString(tip))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header("Employee-Id", 1L))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.tipId", is(tip.getTipId()), Long.class))
+                .andExpect(jsonPath("$.qrCode", is(tip.getQrCode())));
+    }
+
+    @Test
+    @SneakyThrows
+    void getTip_shouldReturnTip() {
+        when(employeeService.getTip(anyLong()))
+                .thenReturn(tip);
+
+        mvc.perform(get("/employee/tip")
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header("Employee-Id", 1L))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.tipId", is(tip.getTipId()), Long.class))
+                .andExpect(jsonPath("$.qrCode", is(tip.getQrCode())));
+    }
+
+    @Test
+    @SneakyThrows
+    void deleteTep_shouldDeleteTip() {
+        employeeService.deleteTip(1L);
+
+        verify(employeeService, Mockito.times(1))
+                .deleteTip(1L);
     }
 }

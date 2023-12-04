@@ -9,6 +9,9 @@ import com.waiter.javawaiter.employee.repository.EmployeeRepository;
 import com.waiter.javawaiter.exception.AccessViolationException;
 import com.waiter.javawaiter.exception.AlreadyExistsException;
 import com.waiter.javawaiter.exception.NotFoundException;
+import com.waiter.javawaiter.exception.ValidationViolationException;
+import com.waiter.javawaiter.tip.model.Tip;
+import com.waiter.javawaiter.tip.repository.TipRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -22,6 +25,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeRepository employeeRepository;
+    private final TipRepository tipRepository;
     private final EmployeeMapper mapper;
 
     @Override
@@ -33,6 +37,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee thisEmployee = mapper.toEmployee(employee);
         thisEmployee.setIsActive(true);
         thisEmployee.setIsAdmin(true);
+        thisEmployee.setTip(null);
         return mapper.toEmployeeShortDto(employeeRepository.save(thisEmployee));
     }
 
@@ -46,6 +51,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee thisEmployee = mapper.toEmployee(employee);
         thisEmployee.setIsActive(true);
         thisEmployee.setIsAdmin(false);
+        thisEmployee.setTip(null);
         return mapper.toEmployeeShortDto(employeeRepository.save(thisEmployee));
     }
 
@@ -73,16 +79,14 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public EmployeeForAdminDto getByAdmin(Long adminId, Long employeeId) {
         adminValidation(adminId);
-        Employee employee = employeeRepository.findById(employeeId)
-                .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
+        Employee employee = employeeChecker(employeeId);
         return mapper.toEmployeeForAdminDto(employee);
     }
 
     @Override
     public void updateIsActive(Long adminId, Long employeeId, Boolean isActive) {
         adminValidation(adminId);
-        Employee employee = employeeRepository.findById(employeeId)
-                .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
+        Employee employee = employeeChecker(employeeId);
         employee.setIsActive(isActive);
         employeeRepository.save(employee);
     }
@@ -93,6 +97,42 @@ public class EmployeeServiceImpl implements EmployeeService {
         List<Employee> employees = employeeRepository.findEmployeesByIsActive(true);
         return employees.stream().filter(e -> !e.getIsAdmin())
                 .map(mapper::toEmployeeShortDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public Tip addTip(Long employeeId, Tip tip) {
+        Employee employee = employeeChecker(employeeId);
+        if (tip.getQrCode().isBlank()) {
+            throw new ValidationViolationException("Необходимо указать QR-код");
+        }
+        Tip thisTip = tipRepository.save(tip);
+        employee.setTip(thisTip);
+        Employee thisEmployee = employeeRepository.save(employee);
+        log.info("Employee: {}", thisEmployee);
+        log.info("Tip: {}", thisTip);
+        return thisTip;
+    }
+
+    @Override
+    public Tip getTip(Long employeeId) {
+        Employee employee = employeeChecker(employeeId);
+        return tipRepository.findById(employee.getTip().getTipId())
+                .orElseThrow(() -> new NotFoundException("Не найдено"));
+    }
+
+    @Override
+    public void deleteTip(Long employeeId) {
+        Employee employee = employeeChecker(employeeId);
+        Tip tip = tipRepository.findById(employee.getTip().getTipId())
+                .orElseThrow(() -> new NotFoundException("У работника нет доступных QR-кодов"));
+        employee.setTip(null);
+        employeeRepository.save(employee);
+        tipRepository.deleteById(tip.getTipId());
+    }
+
+    private Employee employeeChecker(Long employeeId) {
+        return employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
     }
 
     private Employee fieldsValidation(Long employeeId, EmployeeDto employee) {

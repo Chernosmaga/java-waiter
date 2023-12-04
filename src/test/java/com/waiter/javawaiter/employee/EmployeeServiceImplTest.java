@@ -9,6 +9,9 @@ import com.waiter.javawaiter.employee.service.EmployeeService;
 import com.waiter.javawaiter.exception.AccessViolationException;
 import com.waiter.javawaiter.exception.AlreadyExistsException;
 import com.waiter.javawaiter.exception.NotFoundException;
+import com.waiter.javawaiter.exception.ValidationViolationException;
+import com.waiter.javawaiter.tip.model.Tip;
+import com.waiter.javawaiter.tip.repository.TipRepository;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -31,6 +34,7 @@ public class EmployeeServiceImplTest {
     private final EmployeeService service;
     private final EmployeeMapper mapper;
     private final EmployeeRepository repository;
+    private final TipRepository tipRepository;
 
     private final EmployeeDto adminDto = new EmployeeDto(1L, "89996600000", "Alex",
             "Alexandrov", "alex.alexandrov");
@@ -38,10 +42,12 @@ public class EmployeeServiceImplTest {
             "Makarova", "mashamasha1998");
     private final EmployeeDto employeeDto1 = new EmployeeDto(3L, "89601234550", "Anna",
             "Ivanova", "ivanova1996");
+    private final Tip tip = new Tip(1L, "https://qr-code-tip.com");
 
     @AfterEach
     void afterEach() {
         repository.deleteAll();
+        tipRepository.deleteAll();
     }
 
     @Test
@@ -260,7 +266,50 @@ public class EmployeeServiceImplTest {
     }
 
     @Test
-    void get_shouldCatchExceptionAndReturnNotFoundException() {
+    void addTip_shouldAddTip() {
+        EmployeeShortDto thisAdmin = service.createAdmin(adminDto);
+        EmployeeShortDto thisEmployee = service.create(thisAdmin.getEmployeeId(), employeeDto1);
+        Tip thisTip = service.addTip(thisEmployee.getEmployeeId(), tip);
 
+        assertThat(thisTip.getQrCode(), equalTo(tip.getQrCode()));
+    }
+
+    @Test
+    void addTip_shouldThrowExceptionIfEmployeeNotFound() {
+        assertThrows(NotFoundException.class,
+                () -> service.addTip(999L, tip));
+    }
+
+    @Test
+    void addTip_shouldThrowExceptionIfQrIsNull() {
+        EmployeeShortDto thisAdmin = service.createAdmin(adminDto);
+        Tip thisTip = new Tip(1L, " ");
+
+        assertThrows(ValidationViolationException.class,
+                () -> service.addTip(thisAdmin.getEmployeeId(), thisTip));
+    }
+
+    @Test
+    void getTip_shouldReturnTip() {
+        EmployeeShortDto thisAdmin = service.createAdmin(adminDto);
+        service.addTip(thisAdmin.getEmployeeId(), tip);
+        Tip returnedTip = service.getTip(thisAdmin.getEmployeeId());
+
+        assertThat(returnedTip.getQrCode(), equalTo(tip.getQrCode()));
+    }
+
+    @Test
+    void deleteTip_shouldDeleteTip() {
+        EmployeeShortDto thisAdmin = service.createAdmin(adminDto);
+        service.addTip(thisAdmin.getEmployeeId(), tip);
+        service.deleteTip(thisAdmin.getEmployeeId());
+
+        assertTrue(tipRepository.findAll().isEmpty());
+    }
+
+    @Test
+    void deleteTip_shouldThrowExceptionIfEmployeeNotFound() {
+        assertThrows(NotFoundException.class,
+                () -> service.deleteTip(999L));
     }
 }
