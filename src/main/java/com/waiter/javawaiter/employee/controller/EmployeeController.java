@@ -4,6 +4,7 @@ import com.waiter.javawaiter.employee.dto.EmployeeDto;
 import com.waiter.javawaiter.employee.dto.EmployeeForAdminDto;
 import com.waiter.javawaiter.employee.dto.EmployeeShortDto;
 import com.waiter.javawaiter.employee.service.EmployeeService;
+import com.waiter.javawaiter.tip.model.Tip;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -54,5 +55,21 @@ public class EmployeeController {
     @GetMapping
     public List<EmployeeShortDto> getEmployees(@RequestHeader(HEADER) Long adminId) {
         return employeeService.getEmployees(adminId);
+    }
+
+    @PostMapping("/tip")
+    public Tip addTip(@RequestHeader(HEADER) Long employeeId,
+                      @RequestBody Tip tip) {
+        return employeeService.addTip(employeeId, tip);
+    }
+
+    @GetMapping("/tip")
+    public Tip getTip(@RequestHeader(HEADER) Long employeeId) {
+        return employeeService.getTip(employeeId);
+    }
+
+    @DeleteMapping("/tip")
+    public void deleteTip(@RequestHeader(HEADER) Long employeeId) {
+        employeeService.deleteTip(employeeId);
     }
 }
