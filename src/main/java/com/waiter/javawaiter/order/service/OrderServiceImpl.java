@@ -23,8 +23,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -50,10 +49,11 @@ public class OrderServiceImpl implements OrderService {
         thisOrder.setCreationTime(localDateTime);
         thisOrder.setBillTime(null);
         thisOrder.setTotal(null);
-        log.info("Добавлен заказ: {}", thisOrder);
         saveCommentsForDishes(order.getDishes());
         var orderForReturn = orderMapper.toOrderDto(orderRepository.save(thisOrder));
-        orderForReturn.setDishes(order.getDishes());
+        List<DishForOrderDto> list = squashDishes(orderForReturn.getDishes());
+        orderForReturn.setDishes(list);
+        log.info("Добавлен заказ: {}", thisOrder);
         return orderForReturn;
     }
 
@@ -64,6 +64,9 @@ public class OrderServiceImpl implements OrderService {
         var thisOrder = orderRepository.findById(orderId).orElseThrow(() -> new NotFoundException("Заказ не найден"));
         if (thisOrder.getBillTime() != null || thisOrder.getTotal() != null) {
             throw new ValidationViolationException("Заказ закрыт, нельзя изменить данные");
+        }
+        if (order.getTableNumber() != null) {
+            thisOrder.setTableNumber(order.getTableNumber());
         }
         if (order.getGuests() != null) {
             thisOrder.setGuests(order.getGuests());
@@ -163,16 +166,19 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private List<DishForOrderDto> getCommentsForDishes(List<DishForOrderDto> dishes) {
+        log.debug("getCommentsForDishes({})", dishes);
         List<DishForOrderDto> list = new ArrayList<>();
         for (DishForOrderDto dish: dishes) {
             Comment comment = commentRepository.findByDishId(dish.getDishId());
             dish.setComment(commentMapper.toCommentShortDto(comment));
             list.add(dish);
         }
+        log.info("Возвращен список блюд с комментариями: {}", list);
         return list;
     }
 
     private void saveCommentsForDishes(List<DishForOrderDto> dishes) {
+        log.debug("saveCommentsForDishes({})", dishes);
         for (DishForOrderDto dish: dishes) {
             if (dish.getComment() == null) {
                 continue;
@@ -180,9 +186,11 @@ public class OrderServiceImpl implements OrderService {
             commentRepository.save(new Comment(dish.getComment().getCommentId(),
                     dish.getDishId(), dish.getComment().getComment()));
         }
+        log.info("Сохранены комментарии для блюд: {}", dishes);
     }
 
     private void decreaseQuantity(List<Dish> dishes) {
+        log.debug("decreaseQuantity({})", dishes);
         for (Dish dish: dishes) {
             if (dish.getQuantity() != 0) {
                 dish.setQuantity(dish.getQuantity() - 1);
@@ -191,5 +199,28 @@ public class OrderServiceImpl implements OrderService {
                 throw new ValidationViolationException("Блюда " + dish + " нет в наличии");
             }
         }
+        log.info("Уменьшено количество для каждого блюда в заказе: {}", dishes);
+    }
+
+    private List<DishForOrderDto> squashDishes(List<DishForOrderDto> dishes) {
+        log.debug("squashDishes({})", dishes);
+        Map<DishForOrderDto, Integer> repeats = new HashMap<>();
+        Iterator<DishForOrderDto> iterator = dishes.iterator();
+        while (iterator.hasNext()) {
+            DishForOrderDto dish = iterator.next();
+            if (repeats.containsKey(dish) && dish.getComment() == null) {
+                repeats.put(dish, repeats.get(dish) + 1);
+                iterator.remove();
+            } else {
+                repeats.put(dish, 1);
+            }
+        }
+        List<DishForOrderDto> list = new ArrayList<>();
+        for (Map.Entry<DishForOrderDto, Integer> map: repeats.entrySet()) {
+            map.getKey().setQuantityForOrder(map.getValue());
+            list.add(map.getKey());
+        }
+        log.info("Возвращён список блюд после объединения: {}", list);
+        return list;
     }
 }

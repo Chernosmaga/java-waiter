@@ -14,6 +14,8 @@ import java.util.List;
 @AllArgsConstructor
 public class OrderShortDto {
     private Long orderId;
+    @NotNull(message = "Укажите номер стола")
+    private Integer tableNumber;
     @NotNull(message = "Для создания заказа за столом должен быть хотя бы один гость")
     private Integer guests;
     private List<DishForOrderDto> dishes;

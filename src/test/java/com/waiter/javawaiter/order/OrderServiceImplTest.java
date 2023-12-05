@@ -6,7 +6,6 @@ import com.waiter.javawaiter.dish.model.Dish;
 import com.waiter.javawaiter.dish.repository.DishRepository;
 import com.waiter.javawaiter.employee.model.Employee;
 import com.waiter.javawaiter.employee.repository.EmployeeRepository;
-import com.waiter.javawaiter.enums.Status;
 import com.waiter.javawaiter.enums.Type;
 import com.waiter.javawaiter.exception.AccessViolationException;
 import com.waiter.javawaiter.exception.NotFoundException;
@@ -18,7 +17,6 @@ import com.waiter.javawaiter.order.repository.OrderRepository;
 import com.waiter.javawaiter.order.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -46,25 +44,7 @@ public class OrderServiceImplTest {
 
     private final Employee employee = new Employee(2L, "89601234567", "Maria",
             "Makarova", "mashamasha1998", true, true);
-    private final Dish kitchen = new Dish(1L, "Свекольник", 5, 15L,
-            300.0, Status.CREATED, Type.KITCHEN);
-    private final DishForOrderDto kitchenForOrderDto = new DishForOrderDto(1L, "Свекольник", 300.0,
-            null, Type.KITCHEN);
-    private final Dish lemonade = new Dish(2L, "Лимонад", 10, 5L,
-            400.0, Status.CREATED, Type.BAR);
-    private final DishForOrderDto lemonadeForOrderDto = new DishForOrderDto(2L, "Лимонад", 400.0,
-            new CommentShortDto(1L, "Без льда"), Type.BAR);
-    private final Dish coffee = new Dish(3L, "Капучино", 3, 5L, 400.0,
-            Status.CREATED, Type.BAR);
-    private final DishForOrderDto coffeeForOrderDto = new DishForOrderDto(3L, "Капучино", 400.0,
-            new CommentShortDto(3L, "С корицей"), Type.BAR);
 
-    @BeforeEach
-    void beforeEach() {
-        repository.save(kitchen);
-        repository.save(lemonade);
-        repository.save(coffee);
-    }
 
     @AfterEach
     void afterEach() {
@@ -75,18 +55,68 @@ public class OrderServiceImplTest {
 
     @Test
     void create_shouldCreateOrder() {
+        Dish kitchen = repository.save(new Dish(1L, "Свекольник", 5, 15L, 300.0,
+            Type.KITCHEN));
+        Dish lemonade = repository.save(new Dish(2L, "Лимонад", 10, 5L, 400.0,
+                Type.BAR));
+        DishForOrderDto lemonadeForOrderDto = new DishForOrderDto(lemonade.getDishId(), "Лимонад", 1,
+                400.0, new CommentShortDto(1L, "Без льда"), Type.BAR);
+        DishForOrderDto kitchenForOrderDto = new DishForOrderDto(kitchen.getDishId(), "Свекольник",
+                1, 300.0, null, Type.KITCHEN);
         Employee thisEmployee = employeeRepository.save(employee);
-        OrderShortDto orderShortDto = new OrderShortDto(1L, 3,
+        OrderShortDto orderShortDto = new OrderShortDto(1L, 3, 1,
                 new ArrayList<>(List.of(kitchenForOrderDto, lemonadeForOrderDto)),
                 LocalDateTime.now());
         OrderDto savedOrder = orderService.create(thisEmployee.getEmployeeId(), orderShortDto, LocalDateTime.now());
 
-        assertTrue(savedOrder.getDishes().containsAll(List.of(kitchenForOrderDto, lemonadeForOrderDto)));
+        assertEquals(2, savedOrder.getDishes().size());
+    }
+
+    @Test
+    void create_shouldSquashDishesAndCreateOrder() {
+        Dish kitchen = repository.save(new Dish(1L, "Свекольник", 5, 15L, 300.0,
+            Type.KITCHEN));
+        DishForOrderDto kitchenForOrderDto = new DishForOrderDto(kitchen.getDishId(), "Свекольник",
+                1, 300.0, null, Type.KITCHEN);
+        Employee thisEmployee = employeeRepository.save(employee);
+        OrderShortDto orderShortDto = new OrderShortDto(1L, 3, 1,
+                new ArrayList<>(List.of(kitchenForOrderDto, kitchenForOrderDto)),
+                LocalDateTime.now());
+        OrderDto savedOrder = orderService.create(thisEmployee.getEmployeeId(), orderShortDto, LocalDateTime.now());
+
+        assertEquals(1, savedOrder.getDishes().size());
+    }
+
+    @Test
+    void create_shouldNotSquashDishesIfTheHaveComments() {
+        Dish kitchen = repository.save(new Dish(1L, "Свекольник", 5, 15L, 300.0,
+            Type.KITCHEN));
+        Dish kitchen1 = repository.save(new Dish(2L, "Свекольник", 5, 15L, 300.0,
+                Type.KITCHEN));
+        DishForOrderDto kitchenForOrderDto = new DishForOrderDto(kitchen.getDishId(), "Свекольник",
+                1, 300.0, new CommentShortDto(1L, "Без сметаны"), Type.KITCHEN);
+        DishForOrderDto kitchenForOrderDto1 = new DishForOrderDto(kitchen1.getDishId(), "Свекольник",
+                1, 300.0, new CommentShortDto(2L, "Без горчицы"), Type.KITCHEN);
+        Employee thisEmployee = employeeRepository.save(employee);
+        OrderShortDto orderShortDto = new OrderShortDto(1L, 3, 1,
+                new ArrayList<>(List.of(kitchenForOrderDto, kitchenForOrderDto1)),
+                LocalDateTime.now());
+        OrderDto savedOrder = orderService.create(thisEmployee.getEmployeeId(), orderShortDto, LocalDateTime.now());
+
+        assertEquals(2, savedOrder.getDishes().size());
     }
 
     @Test
     void create_shouldThrowExceptionIfEmployeeIdIsIncorrect() {
-        OrderShortDto orderShortDto = new OrderShortDto(1L, 3,
+        Dish kitchen = repository.save(new Dish(1L, "Свекольник", 5, 15L, 300.0,
+            Type.KITCHEN));
+        Dish lemonade = repository.save(new Dish(2L, "Лимонад", 10, 5L, 400.0,
+                Type.BAR));
+        DishForOrderDto lemonadeForOrderDto = new DishForOrderDto(lemonade.getDishId(), "Лимонад", 1,
+                400.0, new CommentShortDto(1L, "Без льда"), Type.BAR);
+        DishForOrderDto kitchenForOrderDto = new DishForOrderDto(kitchen.getDishId(), "Свекольник",
+                1, 300.0, null, Type.KITCHEN);
+        OrderShortDto orderShortDto = new OrderShortDto(1L, 3, 1,
                 new ArrayList<>(List.of(kitchenForOrderDto, lemonadeForOrderDto)),
                 LocalDateTime.now());
         assertThrows(NotFoundException.class, () ->
@@ -95,8 +125,16 @@ public class OrderServiceImplTest {
 
     @Test
     void update_shouldUpdateOrder() {
+        Dish kitchen = repository.save(new Dish(1L, "Свекольник", 5, 15L, 300.0,
+                Type.KITCHEN));
+        Dish lemonade = repository.save(new Dish(2L, "Лимонад", 10, 5L, 400.0,
+                Type.BAR));
+        DishForOrderDto lemonadeForOrderDto = new DishForOrderDto(lemonade.getDishId(), "Лимонад", 1,
+                400.0, new CommentShortDto(1L, "Без льда"), Type.BAR);
+        DishForOrderDto kitchenForOrderDto = new DishForOrderDto(kitchen.getDishId(), "Свекольник",
+                1, 300.0, null, Type.KITCHEN);
         Employee thisEmployee = employeeRepository.save(employee);
-        OrderShortDto orderShortDto = new OrderShortDto(1L, 3,
+        OrderShortDto orderShortDto = new OrderShortDto(1L, 3, 1,
                 new ArrayList<>(List.of(kitchenForOrderDto, lemonadeForOrderDto)),
                 LocalDateTime.now());
         OrderDto savedOrder = orderService.create(thisEmployee.getEmployeeId(), orderShortDto, LocalDateTime.now());
@@ -111,8 +149,16 @@ public class OrderServiceImplTest {
 
     @Test
     void update_shouldThrowExceptionIfEmployeeIdIsIncorrect() {
+        Dish kitchen = repository.save(new Dish(1L, "Свекольник", 5, 15L, 300.0,
+                Type.KITCHEN));
+        Dish lemonade = repository.save(new Dish(2L, "Лимонад", 10, 5L, 400.0,
+                Type.BAR));
+        DishForOrderDto lemonadeForOrderDto = new DishForOrderDto(lemonade.getDishId(), "Лимонад", 1,
+                400.0, new CommentShortDto(1L, "Без льда"), Type.BAR);
+        DishForOrderDto kitchenForOrderDto = new DishForOrderDto(kitchen.getDishId(), "Свекольник",
+                1, 300.0, null, Type.KITCHEN);
         Employee thisEmployee = employeeRepository.save(employee);
-        OrderShortDto orderShortDto = new OrderShortDto(1L, 3,
+        OrderShortDto orderShortDto = new OrderShortDto(1L, 3, 1,
                 new ArrayList<>(List.of(kitchenForOrderDto, lemonadeForOrderDto)),
                 LocalDateTime.now());
         OrderDto savedOrder = orderService.create(thisEmployee.getEmployeeId(), orderShortDto, LocalDateTime.now());
@@ -124,8 +170,16 @@ public class OrderServiceImplTest {
 
     @Test
     void update_shouldUpdateIfGuestsIsNull() {
+        Dish kitchen = repository.save(new Dish(1L, "Свекольник", 5, 15L, 300.0,
+                Type.KITCHEN));
+        Dish lemonade = repository.save(new Dish(2L, "Лимонад", 10, 5L, 400.0,
+                Type.BAR));
+        DishForOrderDto lemonadeForOrderDto = new DishForOrderDto(lemonade.getDishId(), "Лимонад", 1,
+                400.0, new CommentShortDto(1L, "Без льда"), Type.BAR);
+        DishForOrderDto kitchenForOrderDto = new DishForOrderDto(kitchen.getDishId(), "Свекольник",
+                1, 300.0, null, Type.KITCHEN);
         Employee thisEmployee = employeeRepository.save(employee);
-        OrderShortDto orderShortDto = new OrderShortDto(1L, 3,
+        OrderShortDto orderShortDto = new OrderShortDto(1L, 3, 1,
                 new ArrayList<>(List.of(kitchenForOrderDto, lemonadeForOrderDto)),
                 LocalDateTime.now());
         OrderDto savedOrder = orderService.create(thisEmployee.getEmployeeId(), orderShortDto, LocalDateTime.now());
@@ -134,14 +188,22 @@ public class OrderServiceImplTest {
         OrderDto updatedOrder = orderService.update(thisEmployee.getEmployeeId(), savedOrder.getOrderId(), order);
 
         assertThat(updatedOrder.getOrderId(), equalTo(savedOrder.getOrderId()));
-        assertThat(updatedOrder.getGuests(), equalTo(3));
+        assertThat(updatedOrder.getGuests(), equalTo(1));
         assertThat(updatedOrder.getCreationTime(), equalTo(savedOrder.getCreationTime()));
     }
 
     @Test
     void update_shouldUpdateIfDishesAreEmpty() {
+        Dish kitchen = repository.save(new Dish(1L, "Свекольник", 5, 15L, 300.0,
+                Type.KITCHEN));
+        Dish lemonade = repository.save(new Dish(2L, "Лимонад", 10, 5L, 400.0,
+                Type.BAR));
+        DishForOrderDto lemonadeForOrderDto = new DishForOrderDto(lemonade.getDishId(), "Лимонад", 1,
+                400.0, new CommentShortDto(1L, "Без льда"), Type.BAR);
+        DishForOrderDto kitchenForOrderDto = new DishForOrderDto(kitchen.getDishId(), "Свекольник",
+                1, 300.0, null, Type.KITCHEN);
         Employee thisEmployee = employeeRepository.save(employee);
-        OrderShortDto orderShortDto = new OrderShortDto(1L, 3,
+        OrderShortDto orderShortDto = new OrderShortDto(1L, 3, 1,
                 new ArrayList<>(List.of(kitchenForOrderDto, lemonadeForOrderDto)),
                 LocalDateTime.now());
         OrderDto savedOrder = orderService.create(thisEmployee.getEmployeeId(), orderShortDto, LocalDateTime.now());
@@ -150,15 +212,27 @@ public class OrderServiceImplTest {
         OrderDto updatedOrder = orderService.update(thisEmployee.getEmployeeId(), savedOrder.getOrderId(), order);
 
         assertThat(updatedOrder.getOrderId(), equalTo(savedOrder.getOrderId()));
-        assertThat(updatedOrder.getGuests(), equalTo(3));
+        assertThat(updatedOrder.getGuests(), equalTo(1));
         assertThat(updatedOrder.getCreationTime(), equalTo(savedOrder.getCreationTime()));
         assertFalse(updatedOrder.getDishes().isEmpty());
     }
 
     @Test
     void update_shouldUpdateIfAddingNewDishToOrder() {
+        Dish kitchen = repository.save(new Dish(1L, "Свекольник", 5, 15L, 300.0,
+                Type.KITCHEN));
+        Dish lemonade = repository.save(new Dish(2L, "Лимонад", 10, 5L, 400.0,
+                Type.BAR));
+        Dish coffee = repository.save(new Dish(3L, "Капучино", 5, 5L, 400.0,
+                Type.BAR));
+        DishForOrderDto coffeeForOrderDto = new DishForOrderDto(coffee.getDishId(), "Капучино", 1,
+                400.0, new CommentShortDto(3L, "С корицей"), Type.BAR);
+        DishForOrderDto lemonadeForOrderDto = new DishForOrderDto(lemonade.getDishId(), "Лимонад", 1,
+                400.0, new CommentShortDto(1L, "Без льда"), Type.BAR);
+        DishForOrderDto kitchenForOrderDto = new DishForOrderDto(kitchen.getDishId(), "Свекольник",
+                1, 300.0, null, Type.KITCHEN);
         Employee thisEmployee = employeeRepository.save(employee);
-        OrderShortDto orderShortDto = new OrderShortDto(1L, 3,
+        OrderShortDto orderShortDto = new OrderShortDto(1L, 3, 1,
                 new ArrayList<>(List.of(kitchenForOrderDto, lemonadeForOrderDto)),
                 LocalDateTime.now());
         OrderDto savedOrder = orderService.create(thisEmployee.getEmployeeId(), orderShortDto, LocalDateTime.now());
@@ -176,8 +250,16 @@ public class OrderServiceImplTest {
 
     @Test
     void update_shouldThrowExceptionIfChangingCreationTime() {
+        Dish kitchen = repository.save(new Dish(1L, "Свекольник", 5, 15L, 300.0,
+                Type.KITCHEN));
+        Dish lemonade = repository.save(new Dish(2L, "Лимонад", 10, 5L, 400.0,
+                Type.BAR));
+        DishForOrderDto lemonadeForOrderDto = new DishForOrderDto(lemonade.getDishId(), "Лимонад", 1,
+                400.0, new CommentShortDto(1L, "Без льда"), Type.BAR);
+        DishForOrderDto kitchenForOrderDto = new DishForOrderDto(kitchen.getDishId(), "Свекольник",
+                1, 300.0, null, Type.KITCHEN);
         Employee thisEmployee = employeeRepository.save(employee);
-        OrderShortDto orderShortDto = new OrderShortDto(1L, 3,
+        OrderShortDto orderShortDto = new OrderShortDto(1L, 3, 1,
                 new ArrayList<>(List.of(kitchenForOrderDto, lemonadeForOrderDto)),
                 LocalDateTime.now());
         OrderDto savedOrder = orderService.create(thisEmployee.getEmployeeId(), orderShortDto, LocalDateTime.now());
@@ -190,8 +272,16 @@ public class OrderServiceImplTest {
 
     @Test
     void deleteById_shouldDeleteById() {
+        Dish kitchen = repository.save(new Dish(1L, "Свекольник", 5, 15L, 300.0,
+                Type.KITCHEN));
+        Dish lemonade = repository.save(new Dish(2L, "Лимонад", 10, 5L, 400.0,
+                Type.BAR));
+        DishForOrderDto lemonadeForOrderDto = new DishForOrderDto(lemonade.getDishId(), "Лимонад", 1,
+                400.0, new CommentShortDto(1L, "Без льда"), Type.BAR);
+        DishForOrderDto kitchenForOrderDto = new DishForOrderDto(kitchen.getDishId(), "Свекольник",
+                1, 300.0, null, Type.KITCHEN);
         Employee thisEmployee = employeeRepository.save(employee);
-        OrderShortDto orderShortDto = new OrderShortDto(1L, 3,
+        OrderShortDto orderShortDto = new OrderShortDto(1L, 3, 1,
                 new ArrayList<>(List.of(kitchenForOrderDto, lemonadeForOrderDto)),
                 LocalDateTime.now());
         OrderDto savedOrder = orderService.create(thisEmployee.getEmployeeId(), orderShortDto, LocalDateTime.now());
@@ -217,8 +307,16 @@ public class OrderServiceImplTest {
 
     @Test
     void getById_shouldReturnOrder() {
+        Dish kitchen = repository.save(new Dish(1L, "Свекольник", 5, 15L, 300.0,
+                Type.KITCHEN));
+        Dish lemonade = repository.save(new Dish(2L, "Лимонад", 10, 5L, 400.0,
+                Type.BAR));
+        DishForOrderDto lemonadeForOrderDto = new DishForOrderDto(lemonade.getDishId(), "Лимонад", 1,
+                400.0, new CommentShortDto(1L, "Без льда"), Type.BAR);
+        DishForOrderDto kitchenForOrderDto = new DishForOrderDto(kitchen.getDishId(), "Свекольник",
+                1, 300.0, null, Type.KITCHEN);
         Employee thisEmployee = employeeRepository.save(employee);
-        OrderShortDto orderShortDto = new OrderShortDto(1L, 3,
+        OrderShortDto orderShortDto = new OrderShortDto(1L, 3, 1,
                 new ArrayList<>(List.of(kitchenForOrderDto, lemonadeForOrderDto)),
                 LocalDateTime.now());
         OrderDto savedOrder = orderService.create(thisEmployee.getEmployeeId(), orderShortDto, LocalDateTime.now());
@@ -247,12 +345,24 @@ public class OrderServiceImplTest {
 
     @Test
     void getOrders_shouldReturnListOfOrders() {
+        Dish kitchen = repository.save(new Dish(1L, "Свекольник", 5, 15L, 300.0,
+                Type.KITCHEN));
+        Dish lemonade = repository.save(new Dish(2L, "Лимонад", 10, 5L, 400.0,
+                Type.BAR));
+        DishForOrderDto lemonadeForOrderDto = new DishForOrderDto(lemonade.getDishId(), "Лимонад", 1,
+                400.0, new CommentShortDto(1L, "Без льда"), Type.BAR);
+        Dish lemonade1 = repository.save(new Dish(2L, "Лимонад", 10, 5L, 400.0,
+                Type.BAR));
+        DishForOrderDto lemonadeForOrderDto1 = new DishForOrderDto(lemonade1.getDishId(), "Лимонад", 1,
+                400.0, new CommentShortDto(1L, "Без льда"), Type.BAR);
+        DishForOrderDto kitchenForOrderDto = new DishForOrderDto(kitchen.getDishId(), "Свекольник",
+                1, 300.0, null, Type.KITCHEN);
         Employee thisEmployee = employeeRepository.save(employee);
-        OrderShortDto firstOrder = new OrderShortDto(1L, 3,
+        OrderShortDto firstOrder = new OrderShortDto(1L, 3, 1,
                 new ArrayList<>(List.of(kitchenForOrderDto, lemonadeForOrderDto)),
                 LocalDateTime.now());
-        OrderShortDto secondOrder = new OrderShortDto(2L, 1,
-                new ArrayList<>(List.of(lemonadeForOrderDto)), LocalDateTime.now());
+        OrderShortDto secondOrder = new OrderShortDto(2L, 1, 2,
+                new ArrayList<>(List.of(lemonadeForOrderDto1)), LocalDateTime.now());
         OrderDto first = orderService.create(thisEmployee.getEmployeeId(), firstOrder, LocalDateTime.now());
         OrderDto second = orderService.create(thisEmployee.getEmployeeId(), secondOrder,
                 LocalDateTime.now().plusMinutes(2));
@@ -264,10 +374,18 @@ public class OrderServiceImplTest {
 
     @Test
     void deleteById_shouldThrowExceptionIfAccessViolated() {
+        Dish kitchen = repository.save(new Dish(1L, "Свекольник", 5, 15L, 300.0,
+                Type.KITCHEN));
+        Dish lemonade = repository.save(new Dish(2L, "Лимонад", 10, 5L, 400.0,
+                Type.BAR));
+        DishForOrderDto lemonadeForOrderDto = new DishForOrderDto(lemonade.getDishId(), "Лимонад", 1,
+                400.0, new CommentShortDto(1L, "Без льда"), Type.BAR);
+        DishForOrderDto kitchenForOrderDto = new DishForOrderDto(kitchen.getDishId(), "Свекольник",
+                1, 300.0, null, Type.KITCHEN);
         Employee admin = employeeRepository.save(employee);
         Employee thisEmployee = employeeRepository.save(new Employee(3L, "89991112233",
                 "Ivan", "Ivanov", "ivanovivan10", true, false));
-        OrderShortDto thisOrder = new OrderShortDto(1L, 3,
+        OrderShortDto thisOrder = new OrderShortDto(1L, 3, 1,
                 new ArrayList<>(List.of(kitchenForOrderDto, lemonadeForOrderDto)),
                 LocalDateTime.now());
         OrderDto first = orderService.create(admin.getEmployeeId(), thisOrder, LocalDateTime.now());
@@ -278,13 +396,21 @@ public class OrderServiceImplTest {
 
     @Test
     void getOrders_shouldReturnOrdersByEmployee() {
-        Employee admin = employeeRepository.save(employee);
+        Dish kitchen = repository.save(new Dish(1L, "Свекольник", 5, 15L, 300.0,
+                Type.KITCHEN));
+        Dish lemonade = repository.save(new Dish(2L, "Лимонад", 10, 5L, 400.0,
+                Type.BAR));
+        DishForOrderDto lemonadeForOrderDto = new DishForOrderDto(lemonade.getDishId(), "Лимонад", 1,
+                400.0, new CommentShortDto(1L, "Без льда"), Type.BAR);
+        DishForOrderDto kitchenForOrderDto = new DishForOrderDto(kitchen.getDishId(), "Свекольник",
+                1, 300.0, null, Type.KITCHEN);
+        employeeRepository.save(employee);
         Employee thisEmployee = employeeRepository.save(new Employee(3L, "89991112233",
                 "Ivan", "Ivanov", "ivanovivan10", true, false));
-        OrderShortDto thisOrder = new OrderShortDto(1L, 3,
+        OrderShortDto thisOrder = new OrderShortDto(1L, 3, 1,
                 new ArrayList<>(List.of(kitchenForOrderDto, lemonadeForOrderDto)),
                 LocalDateTime.now());
-        OrderDto first = orderService.create(thisEmployee.getEmployeeId(), thisOrder, LocalDateTime.now());
+        orderService.create(thisEmployee.getEmployeeId(), thisOrder, LocalDateTime.now());
         List<OrderDto> orders = orderService.getOrders(thisEmployee.getEmployeeId(), 0, 10);
 
         assertFalse(orders.isEmpty());
@@ -292,12 +418,20 @@ public class OrderServiceImplTest {
 
     @Test
     void getById_shouldThrowExceptionIfNeitherAdminOrEmployeeGettingDish() {
+        Dish kitchen = repository.save(new Dish(1L, "Свекольник", 5, 15L, 300.0,
+                Type.KITCHEN));
+        Dish lemonade = repository.save(new Dish(2L, "Лимонад", 10, 5L, 400.0,
+                Type.BAR));
+        DishForOrderDto lemonadeForOrderDto = new DishForOrderDto(lemonade.getDishId(), "Лимонад", 1,
+                400.0, new CommentShortDto(1L, "Без льда"), Type.BAR);
+        DishForOrderDto kitchenForOrderDto = new DishForOrderDto(kitchen.getDishId(), "Свекольник",
+                1, 300.0, null, Type.KITCHEN);
         employeeRepository.save(employee);
         Employee ivan = employeeRepository.save(new Employee(3L, "89991112233",
                 "Ivan", "Ivanov", "ivanovivan10", true, false));
         Employee andrew = employeeRepository.save(new Employee(5L, "89001110022", "Andrew",
                 "Ivanov", "andrewIvanov", true, false));
-        OrderShortDto thisOrder = new OrderShortDto(1L, 3,
+        OrderShortDto thisOrder = new OrderShortDto(1L, 3, 1,
                 new ArrayList<>(List.of(kitchenForOrderDto, lemonadeForOrderDto)),
                 LocalDateTime.now());
         OrderDto createdOrder = orderService.create(ivan.getEmployeeId(), thisOrder, LocalDateTime.now());

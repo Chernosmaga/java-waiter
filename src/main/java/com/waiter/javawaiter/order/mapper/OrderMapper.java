@@ -19,8 +19,10 @@ public class OrderMapper {
     private final DishMapper dishMapper;
 
     public OrderDto toOrderDto(Order order) {
+        log.info("Из Order в OrderDto: {}", order);
         return new OrderDto(
                 order.getOrderId(),
+                order.getTableNumber(),
                 order.getGuests(),
                 order.getDishes().stream().map(dishMapper::toDishForOrderDto).collect(Collectors.toList()),
                 mapper.toEmployeeShortDto(order.getEmployee()),
@@ -30,16 +32,20 @@ public class OrderMapper {
     }
 
     public Order toOrder(OrderShortDto order) {
+        log.info("Из OrderShortDto в Order: {}", order);
         return new Order(
                 order.getOrderId(),
+                order.getTableNumber(),
                 order.getGuests(),
                 order.getDishes().stream().map(dishMapper::toDish).collect(Collectors.toList()),
                 order.getCreationTime());
     }
 
     public OrderShortDto toOrderShortDto(OrderDto order) {
+        log.info("Из OrderDto в OrderShortDto: {}", order);
         return new OrderShortDto(
                 order.getOrderId(),
+                order.getTableNumber(),
                 order.getGuests(),
                 order.getDishes(),
                 order.getCreationTime());

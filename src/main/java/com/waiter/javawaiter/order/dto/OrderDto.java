@@ -14,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 public class OrderDto {
     private Long orderId;
+    private Integer tableNumber;
     private Integer guests;
     private List<DishForOrderDto> dishes;
     private EmployeeShortDto employee;

@@ -15,5 +15,4 @@ public interface DishRepository extends JpaRepository<Dish, Long> {
     boolean existsByTitleAndType(String title, Type type);
 
     Page<Dish> findDishesByTitleContainingIgnoreCase(String title, Pageable page);
-    Dish findByTitleAndPriceAndType(String title, Double price, Type type);
 }
