@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class DishForOrderDto {
     private Long dishId;
     private String title;
+    private Integer quantityForOrder;
     private Double price;
     private CommentShortDto comment;
     private Type type;

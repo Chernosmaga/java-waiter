@@ -19,6 +19,8 @@ public class Dish implements Comparable<Dish> {
     private Long dishId;
     private String title;
     private Integer quantity;
+    @Column(name = "quantity_for_table")
+    private Integer quantityForTable;
     @Column(name = "time_limit")
     private Long timeLimit;
     private Double price;

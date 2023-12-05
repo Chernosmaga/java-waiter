@@ -38,13 +38,13 @@ public class OrderControllerTest {
     private ObjectMapper mapper;
     @Autowired
     private MockMvc mvc;
-    private final DishForOrderDto dish = new DishForOrderDto(1L, "Свекольник", 300.0,
-                    new CommentShortDto(1L, "Без сметаны"), Type.KITCHEN);
+    private final DishForOrderDto dish = new DishForOrderDto(1L, "Свекольник", 1, 300.0,
+            new CommentShortDto(1L, "Без сметаны"), Type.KITCHEN);
     private final EmployeeShortDto employeeDto = new EmployeeShortDto(2L, "89601234567",
             "Maria", "Makarova");
-    private final OrderShortDto orderShortDto = new OrderShortDto(1L, 3,
+    private final OrderShortDto orderShortDto = new OrderShortDto(1L, 3, 1,
             new ArrayList<>(List.of(dish)), LocalDateTime.now());
-    private final OrderDto orderDto = new OrderDto(1L, 3,
+    private final OrderDto orderDto = new OrderDto(1L, 3, 1,
             new ArrayList<>(List.of(dish)), employeeDto, LocalDateTime.now(), null, null);
 
     @Test
@@ -77,9 +77,9 @@ public class OrderControllerTest {
     @Test
     @SneakyThrows
     void update_shouldUpdateOrder() {
-        OrderShortDto thisOrderShortDto = new OrderShortDto(1L, 5,
+        OrderShortDto thisOrderShortDto = new OrderShortDto(1L, 5, 1,
                 new ArrayList<>(List.of(dish)), LocalDateTime.now());
-        OrderDto thisOrderDto = new OrderDto(1L, 5,
+        OrderDto thisOrderDto = new OrderDto(1L, 5, 2,
                 new ArrayList<>(List.of(dish)), employeeDto, LocalDateTime.now(), null, null);
 
         when(orderService.update(any(Long.class), any(Long.class), any()))

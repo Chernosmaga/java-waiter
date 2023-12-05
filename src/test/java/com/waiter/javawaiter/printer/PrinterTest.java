@@ -38,21 +38,21 @@ public class PrinterTest {
             "Makarova", "mashamasha1998");
     private final DishShortDto lemonadeShortDto = new DishShortDto(2L, "Лимонад", 5, 15L,
             400.0, Type.BAR);
-    private final DishForOrderDto lemonadeForOrderDto = new DishForOrderDto(2L, "Лимонад", 400.0,
-            new CommentShortDto(1L, "Без льда"), Type.BAR);
     private final DishShortDto coffeeShortDto = new DishShortDto(3L, "Капучино", 3, 5L,
             400.0, Type.BAR);
-    private final DishForOrderDto coffeeForOrderDto = new DishForOrderDto(3L, "Капучино", 400.0,
-            new CommentShortDto(3L, "С корицей"), Type.BAR);
-    private final OrderShortDto orderShortDto = new OrderShortDto(1L, 3,
-            new ArrayList<>(List.of(coffeeForOrderDto, lemonadeForOrderDto)),
-            LocalDateTime.now());
 
     @Test
     void printBill_shouldPrintBill() {
         EmployeeShortDto thisEmployee = employeeService.createAdmin(employee);
-        dishService.create(lemonadeShortDto);
-        dishService.create(coffeeShortDto);
+        DishShortDto thisLemonade = dishService.create(lemonadeShortDto);
+        DishShortDto thisCoffee = dishService.create(coffeeShortDto);
+        DishForOrderDto lemonadeForOrderDto = new DishForOrderDto(thisLemonade.getDishId(), "Лимонад",
+                1, 400.0, new CommentShortDto(1L, "Без льда"), Type.BAR);
+        DishForOrderDto coffeeForOrderDto = new DishForOrderDto(thisCoffee.getDishId(), "Капучино",
+                1, 400.0, new CommentShortDto(3L, "С корицей"), Type.BAR);
+        OrderShortDto orderShortDto = new OrderShortDto(1L, 3, 1,
+                new ArrayList<>(List.of(coffeeForOrderDto, lemonadeForOrderDto)),
+                LocalDateTime.now());
         OrderDto thisOrder = orderService.create(thisEmployee.getEmployeeId(), orderShortDto,
                 LocalDateTime.now().minusMinutes(5));
         String receipt = printer.printBill(thisEmployee.getEmployeeId(), thisOrder.getOrderId());

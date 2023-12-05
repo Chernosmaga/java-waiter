@@ -32,8 +32,8 @@ public class DishServiceImplTest {
 
     private final DishShortDto dishShortDto =
             new DishShortDto(1L, "Свекольник", 5, 15L, 300.0, Type.KITCHEN);
-    private final Dish dish = new Dish(1L, "Свекольник", 5, 15L, 300.0,
-            Status.CREATED, Type.KITCHEN);
+    private final Dish dish = new Dish(1L, "Свекольник",  5, 1, 15L,
+            300.0, Status.CREATED, Type.KITCHEN);
 
     @AfterEach
     void afterEach() {

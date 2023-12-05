@@ -13,6 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 public class OrderForAdminDto {
     private Long orderId;
+    private Integer tableNumber;
     private Integer guests;
     private List<DishForOrderDto> dishes;
     private EmployeeShortDto employee;

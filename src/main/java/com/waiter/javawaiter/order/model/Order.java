@@ -20,6 +20,8 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_id")
     private Long orderId;
+    @Column(name = "table_number")
+    private Integer tableNumber;
     private Integer guests;
     @ManyToMany
     @JoinTable(name = "dishes",
@@ -35,8 +37,9 @@ public class Order {
     private LocalDateTime billTime;
     private Double total;
 
-    public Order(Long orderId, Integer guests, List<Dish> dishes, LocalDateTime creationTime) {
+    public Order(Long orderId, Integer tableNumber, Integer guests, List<Dish> dishes, LocalDateTime creationTime) {
         this.orderId = orderId;
+        this.tableNumber = tableNumber;
         this.guests = guests;
         this.dishes = dishes;
         this.creationTime = creationTime;

@@ -31,6 +31,7 @@ public class DishServiceImpl implements DishService {
             throw new AlreadyExistsException("Данные о блюде уже есть в системе");
         }
         Dish thisDish = mapper.toDish(dish);
+        log.info("Создано блюдо: {}", thisDish);
         return mapper.toDishShortDto(dishRepository.save(thisDish));
     }
 
@@ -84,11 +85,14 @@ public class DishServiceImpl implements DishService {
         }
         PageRequest page = PageRequest.of(offset, limit);
         Page<Dish> list = dishRepository.findDishesByTitleContainingIgnoreCase(text, page);
-        return list.stream().sorted(Comparator.reverseOrder()).map(mapper::toDishShortDto)
-                .collect(Collectors.toList());
+        List<DishShortDto> sorted = list.stream().sorted(Comparator.reverseOrder()).map(mapper::toDishShortDto)
+                .toList();
+        log.info("Возвращён лист по запросу поиска: {}", sorted);
+        return sorted;
     }
 
     private Dish validate(Dish dish) {
+        log.debug("validate({})", dish);
         Dish newDish = dishRepository.findByDishId(dish.getDishId());
         newDish.setDishId(dish.getDishId());
         if (dish.getTitle() != null) {
@@ -103,6 +107,7 @@ public class DishServiceImpl implements DishService {
         if (dish.getPrice() != null) {
             newDish.setPrice(dish.getPrice());
         }
+        log.info("Блюдо прошло валидацию полей: {}", newDish);
         return newDish;
     }
 }

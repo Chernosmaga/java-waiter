@@ -30,6 +30,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public EmployeeShortDto createAdmin(EmployeeDto employee) {
+        log.debug("createAdmin({})", employee);
         if (employeeRepository.existsByPhoneAndFirstNameAndSurname(employee.getPhone(),
                 employee.getFirstName(), employee.getSurname())) {
             throw new AlreadyExistsException("Данные о пользователе уже есть в системе");
@@ -38,11 +39,13 @@ public class EmployeeServiceImpl implements EmployeeService {
         thisEmployee.setIsActive(true);
         thisEmployee.setIsAdmin(true);
         thisEmployee.setTip(null);
+        log.info("Создан администратор: {}", thisEmployee);
         return mapper.toEmployeeShortDto(employeeRepository.save(thisEmployee));
     }
 
     @Override
     public EmployeeShortDto create(Long adminId, EmployeeDto employee) {
+        log.debug("create({}, {})", adminId, employee);
         adminValidation(adminId);
         if (employeeRepository.existsByPhoneAndFirstNameAndSurname(employee.getPhone(),
                 employee.getFirstName(), employee.getSurname())) {
@@ -52,18 +55,22 @@ public class EmployeeServiceImpl implements EmployeeService {
         thisEmployee.setIsActive(true);
         thisEmployee.setIsAdmin(false);
         thisEmployee.setTip(null);
+        log.info("Администратором с идентификатором {} был создан пользователь: {}", adminId, employee);
         return mapper.toEmployeeShortDto(employeeRepository.save(thisEmployee));
     }
 
     @Override
     public EmployeeShortDto update(Long adminId, Long employeeId, EmployeeDto employee) {
+        log.debug("update({}, {}, {}", adminId, employeeId, employee);
         adminValidation(adminId);
         Employee thisEmployee = fieldsValidation(employeeId, employee);
+        log.info("Администратором с идентификатором {} был обновлен пользователь: {}", adminId, thisEmployee);
         return mapper.toEmployeeShortDto(employeeRepository.save(thisEmployee));
     }
 
     @Override
     public EmployeeDto get(String phone) {
+        log.debug("get({})", phone);
         Employee employee;
         try {
             employee = employeeRepository.findEmployeeByPhone(phone);
@@ -73,34 +80,43 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (employee == null) {
             throw new NotFoundException("Пользователь не найден");
         }
+        log.info("Возвращён пользователь: {}", employee);
         return mapper.toEmployeeDto(employee);
     }
 
     @Override
     public EmployeeForAdminDto getByAdmin(Long adminId, Long employeeId) {
+        log.debug("getByAdmin({}, {})", adminId, employeeId);
         adminValidation(adminId);
         Employee employee = employeeChecker(employeeId);
+        log.info("Для администратора с идентификатором {} был возвращён пользователь: {}", adminId, employee);
         return mapper.toEmployeeForAdminDto(employee);
     }
 
     @Override
     public void updateIsActive(Long adminId, Long employeeId, Boolean isActive) {
+        log.debug("updateIsActive({}, {}, {})", adminId, employeeId, isActive);
         adminValidation(adminId);
         Employee employee = employeeChecker(employeeId);
         employee.setIsActive(isActive);
         employeeRepository.save(employee);
+        log.info("Администратор с идентификатором {} деактивировал пользователя: {}", adminId, employee);
     }
 
     @Override
     public List<EmployeeShortDto> getEmployees(Long adminId) {
+        log.debug("getEmployees({})", adminId);
         adminValidation(adminId);
         List<Employee> employees = employeeRepository.findEmployeesByIsActive(true);
-        return employees.stream().filter(e -> !e.getIsAdmin())
+        List<EmployeeShortDto> filtered = employees.stream().filter(e -> !e.getIsAdmin())
                 .map(mapper::toEmployeeShortDto).collect(Collectors.toList());
+        log.info("Для администратора с идентификатором {} был возвращён список пользователей: {}", adminId, filtered);
+        return filtered;
     }
 
     @Override
     public Tip addTip(Long employeeId, Tip tip) {
+        log.debug("addTip({}, {})", employeeId, tip);
         Employee employee = employeeChecker(employeeId);
         if (tip.getQrCode().isBlank()) {
             throw new ValidationViolationException("Необходимо указать QR-код");
@@ -108,34 +124,40 @@ public class EmployeeServiceImpl implements EmployeeService {
         Tip thisTip = tipRepository.save(tip);
         employee.setTip(thisTip);
         Employee thisEmployee = employeeRepository.save(employee);
-        log.info("Employee: {}", thisEmployee);
-        log.info("Tip: {}", thisTip);
+        log.info("Для пользователя: {}, были добавлены данные о чаевых: {}", thisEmployee, thisTip);
         return thisTip;
     }
 
     @Override
     public Tip getTip(Long employeeId) {
+        log.debug("getTip({})", employeeId);
         Employee employee = employeeChecker(employeeId);
-        return tipRepository.findById(employee.getTip().getTipId())
+        Tip tip = tipRepository.findById(employee.getTip().getTipId())
                 .orElseThrow(() -> new NotFoundException("Не найдено"));
+        log.info("Пользователем: {}, были запрошены данные о чаевых: {}", employee, tip);
+        return tip;
     }
 
     @Override
     public void deleteTip(Long employeeId) {
+        log.debug("deleteTip({})", employeeId);
         Employee employee = employeeChecker(employeeId);
         Tip tip = tipRepository.findById(employee.getTip().getTipId())
                 .orElseThrow(() -> new NotFoundException("У работника нет доступных QR-кодов"));
         employee.setTip(null);
         employeeRepository.save(employee);
         tipRepository.deleteById(tip.getTipId());
+        log.info("Пользователь: {} удалил свои данные о чаевых: {}", employee, tip);
     }
 
     private Employee employeeChecker(Long employeeId) {
+        log.debug("employeeChecker({})", employeeId);
         return employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
     }
 
     private Employee fieldsValidation(Long employeeId, EmployeeDto employee) {
+        log.debug("fieldsValidation({}, {})", employeeId, employee);
         Employee thisEmployee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
         if (employee.getPhone() != null) {
@@ -150,14 +172,17 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (employee.getUserPassword() != null) {
             thisEmployee.setUserPassword(employee.getUserPassword());
         }
+        log.info("Поля для пользователя прошли валидацию: {}", thisEmployee);
         return thisEmployee;
     }
 
     private void adminValidation(Long adminId) {
+        log.debug("adminValidation({})", adminId);
         Employee admin = employeeRepository.findById(adminId)
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
         if (!admin.getIsAdmin()) {
             throw new AccessViolationException("Нет доступа");
         }
+        log.info("Администратор прошёл валидацию: {}", admin);
     }
 }
