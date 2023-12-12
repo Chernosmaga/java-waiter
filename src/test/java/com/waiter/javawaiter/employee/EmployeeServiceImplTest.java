@@ -4,6 +4,7 @@ import com.waiter.javawaiter.employee.dto.EmployeeDto;
 import com.waiter.javawaiter.employee.dto.EmployeeForAdminDto;
 import com.waiter.javawaiter.employee.dto.EmployeeShortDto;
 import com.waiter.javawaiter.employee.mapper.EmployeeMapper;
+import com.waiter.javawaiter.employee.model.Employee;
 import com.waiter.javawaiter.employee.repository.EmployeeRepository;
 import com.waiter.javawaiter.employee.service.EmployeeService;
 import com.waiter.javawaiter.exception.AccessViolationException;
@@ -38,11 +39,15 @@ public class EmployeeServiceImplTest {
 
     private final EmployeeDto adminDto = new EmployeeDto(1L, "89996600000", "Alex",
             "Alexandrov", "alex.alexandrov");
+    private final Employee admin = new Employee(1L, "89996600000", "Alex",
+            "Alexandrov", "alex.alexandrov", true, true);
     private final EmployeeDto employeeDto = new EmployeeDto(2L, "89601234567", "Maria",
             "Makarova", "mashamasha1998");
     private final EmployeeDto employeeDto1 = new EmployeeDto(3L, "89601234550", "Anna",
             "Ivanova", "ivanova1996");
-    private final Tip tip = new Tip(1L, "https://qr-code-tip.com");
+    private final Employee employee = new Employee(3L, "89601234550", "Anna",
+            "Ivanova", "ivanova1996", true, false);
+    private final Tip tip = new Tip(1L, admin, "https://qr-code-tip.com");
 
     @AfterEach
     void afterEach() {
@@ -269,6 +274,7 @@ public class EmployeeServiceImplTest {
     void addTip_shouldAddTip() {
         EmployeeShortDto thisAdmin = service.createAdmin(adminDto);
         EmployeeShortDto thisEmployee = service.create(thisAdmin.getEmployeeId(), employeeDto1);
+        Tip tip = new Tip(2L, employee, "this is the link for picture");
         Tip thisTip = service.addTip(thisEmployee.getEmployeeId(), tip);
 
         assertThat(thisTip.getQrCode(), equalTo(tip.getQrCode()));
@@ -283,7 +289,7 @@ public class EmployeeServiceImplTest {
     @Test
     void addTip_shouldThrowExceptionIfQrIsNull() {
         EmployeeShortDto thisAdmin = service.createAdmin(adminDto);
-        Tip thisTip = new Tip(1L, " ");
+        Tip thisTip = new Tip(1L, admin, " ");
 
         assertThrows(ValidationViolationException.class,
                 () -> service.addTip(thisAdmin.getEmployeeId(), thisTip));

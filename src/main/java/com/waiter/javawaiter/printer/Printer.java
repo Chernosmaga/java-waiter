@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Component
@@ -37,18 +36,16 @@ public class Printer {
             total += dish.getPrice();
             dishes.add(dish.getTitle() + " " + dish.getPrice());
         }
+        List<Tip> tips = tipRepository.findAllByEmployee(employee);
         order.setTotal(total);
         orderRepository.save(order);
         String print = "";
-        if (employee.getTip() != null) {
-            Optional<Tip> tip = tipRepository.findById(employee.getTip().getTipId());
-            if (tip.isPresent()) {
-                print = "Заказ открыт " + order.getCreationTime() + "\nЗаказ закрыт " + order.getBillTime() +
-                        "\nВас обслуживал: " + employee.getFirstName() + " " + employee.getSurname() +
-                        "\nБлюда в заказе: " + dishes + "\nИтого: " + total +
-                        "\nВы можете поблагодарить своего официанта, " +
-                        "отсканировав QR-код ниже\n" + tip.get().getQrCode();
-            }
+        if (!tips.isEmpty()) {
+            print = "Заказ открыт " + order.getCreationTime() + "\nЗаказ закрыт " + order.getBillTime() +
+                    "\nВас обслуживал: " + employee.getFirstName() + " " + employee.getSurname() +
+                    "\nБлюда в заказе: " + dishes + "\nИтого: " + total +
+                    "\nВы можете поблагодарить своего официанта, " +
+                    "отсканировав QR-код ниже\n" + tips.get(0).getQrCode();
         } else {
             print = "Заказ открыт " + order.getCreationTime() + "\nЗаказ закрыт " + order.getBillTime() +
                     "\nВас обслуживал: " + employee.getFirstName() + " " + employee.getSurname() +

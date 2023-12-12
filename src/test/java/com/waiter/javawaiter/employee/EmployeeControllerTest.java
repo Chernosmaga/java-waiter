@@ -5,6 +5,7 @@ import com.waiter.javawaiter.employee.controller.EmployeeController;
 import com.waiter.javawaiter.employee.dto.EmployeeDto;
 import com.waiter.javawaiter.employee.dto.EmployeeForAdminDto;
 import com.waiter.javawaiter.employee.dto.EmployeeShortDto;
+import com.waiter.javawaiter.employee.model.Employee;
 import com.waiter.javawaiter.employee.service.EmployeeService;
 import com.waiter.javawaiter.exception.ValidationViolationException;
 import com.waiter.javawaiter.tip.model.Tip;
@@ -39,6 +40,8 @@ public class EmployeeControllerTest {
 
     private final EmployeeDto adminDto = new EmployeeDto(1L, "89996600000", "Alex",
             "Alexandrov", "alex.alexandrov");
+    private final Employee admin = new Employee(1L, "89996600000", "Alex",
+            "Alexandrov", "alex.alexandrov", true, true);
     private final EmployeeShortDto adminShortDto = new EmployeeShortDto(1L, "89996600000",
             "Alex", "Alexandrov");
     private final EmployeeDto employeeDto = new EmployeeDto(2L, "89601234567", "Maria",
@@ -47,7 +50,7 @@ public class EmployeeControllerTest {
             "Maria", "Makarova", true, false);
     private final EmployeeShortDto employeeShortDto = new EmployeeShortDto(2L, "89601234567",
             "Maria", "Makarova");
-    private final Tip tip = new Tip(1L, "https://qr-code-tip.com");
+    private final Tip tip = new Tip(1L, admin, "https://qr-code-tip.com");
 
     @Test
     @SneakyThrows
