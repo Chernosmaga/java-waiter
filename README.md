@@ -12,10 +12,4 @@
 Spring Data JPA, PostgreSQL и H2
 
 ## База данных проекта
-![](https://github.com/Chernosmaga/java-waiter/blob/main/java-waiter.png)
-
-## Команда разработки
-* [Сергей Черносмага](https://github.com/Chernosmaga)
-* [Евгений Фоменко](https://github.com/EvgeniyFomenko)
-* [Кирилл Андреев](https://github.com/Elite-tea)
-* [Дмитрий Кичигин](https://github.com/Buriyone)
+![](https://github.com/Chernosmaga/java-waiter/blob/main/src/main/resources/java-waiter.png)
