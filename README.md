@@ -9,7 +9,7 @@
 
 ## Стек проекта
 В проекте используются следующие инструменты: Java 17, Spring Boot, Spring Web, Lombok, Hibernate,
-Spring Data JPA и PostgreSQL.
+Spring Data JPA, PostgreSQL и H2
 
 ## База данных проекта
 ![](https://github.com/Chernosmaga/java-waiter/blob/main/java-waiter.png)

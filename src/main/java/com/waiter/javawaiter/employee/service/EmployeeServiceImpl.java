@@ -38,7 +38,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee thisEmployee = mapper.toEmployee(employee);
         thisEmployee.setIsActive(true);
         thisEmployee.setIsAdmin(true);
-        thisEmployee.setTip(null);
         log.info("Создан администратор: {}", thisEmployee);
         return mapper.toEmployeeShortDto(employeeRepository.save(thisEmployee));
     }
@@ -54,7 +53,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee thisEmployee = mapper.toEmployee(employee);
         thisEmployee.setIsActive(true);
         thisEmployee.setIsAdmin(false);
-        thisEmployee.setTip(null);
         log.info("Администратором с идентификатором {} был создан пользователь: {}", adminId, employee);
         return mapper.toEmployeeShortDto(employeeRepository.save(thisEmployee));
     }
@@ -121,10 +119,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (tip.getQrCode().isBlank()) {
             throw new ValidationViolationException("Необходимо указать QR-код");
         }
+        tip.setEmployee(employee);
         Tip thisTip = tipRepository.save(tip);
-        employee.setTip(thisTip);
-        Employee thisEmployee = employeeRepository.save(employee);
-        log.info("Для пользователя: {}, были добавлены данные о чаевых: {}", thisEmployee, thisTip);
+        log.info("Для пользователя: {}, были добавлены данные о чаевых: {}", employee, thisTip);
         return thisTip;
     }
 
@@ -132,22 +129,20 @@ public class EmployeeServiceImpl implements EmployeeService {
     public Tip getTip(Long employeeId) {
         log.debug("getTip({})", employeeId);
         Employee employee = employeeChecker(employeeId);
-        Tip tip = tipRepository.findById(employee.getTip().getTipId())
-                .orElseThrow(() -> new NotFoundException("Не найдено"));
+        List<Tip> tip = tipRepository.findAllByEmployee(employee);
+        if (tip.isEmpty()) {
+            throw new NotFoundException("Нет QR-кодов");
+        }
         log.info("Пользователем: {}, были запрошены данные о чаевых: {}", employee, tip);
-        return tip;
+        return tip.get(0);
     }
 
     @Override
     public void deleteTip(Long employeeId) {
         log.debug("deleteTip({})", employeeId);
         Employee employee = employeeChecker(employeeId);
-        Tip tip = tipRepository.findById(employee.getTip().getTipId())
-                .orElseThrow(() -> new NotFoundException("У работника нет доступных QR-кодов"));
-        employee.setTip(null);
-        employeeRepository.save(employee);
-        tipRepository.deleteById(tip.getTipId());
-        log.info("Пользователь: {} удалил свои данные о чаевых: {}", employee, tip);
+        tipRepository.deleteAllByEmployee(employee);
+        log.info("Пользователь: {} удалил свои данные о чаевых", employee);
     }
 
     private Employee employeeChecker(Long employeeId) {
