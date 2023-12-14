@@ -12,4 +12,6 @@
 Spring Data JPA, PostgreSQL и H2
 
 ## База данных проекта
-![](https://github.com/Chernosmaga/java-waiter/blob/main/src/main/resources/java-waiter.png)
+![](https://github.com/Chernosmaga/java-waiter/blob/main/server/src/main/resources/java-waiter.png)
+
+
